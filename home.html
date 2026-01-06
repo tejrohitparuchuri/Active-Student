@@ -1,0 +1,1662 @@
+<!doctype html>
+<!-- Cache Bust: 1765601999 -->
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Anurag Voting — Preview</title>
+    <style>
+        :root {
+            /* DARK THEME (Default) */
+            --bg-body: #0b0b0b;
+            --bg-gradient: linear-gradient(180deg, #0b0b0b 0%, #121212 100%);
+            --bg-panel: #161617;
+            --bg-card: #111;
+            --bg-input: #0f0f10;
+            --text-main: #fff;
+            --text-muted: #9a9a9a;
+            --border: rgba(255, 255, 255, 0.06);
+            --accent: #ff9a2c;
+            --shadow: rgba(0, 0, 0, 0.6);
+        }
+
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, system-ui, Arial, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 36px;
+            background: transparent
+        }
+
+        .logo {
+            font-weight: 700;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            padding: 10px 16px;
+            border-radius: 8px;
+            color: var(--text-main);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s
+        }
+
+        .btn:hover {
+            background: var(--border)
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+            transition: transform 0.1s;
+        }
+
+        .btn.filled {
+            background: var(--accent);
+            color: white;
+            border: none;
+        }
+
+        .btn.filled:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            background: var(--accent)
+        }
+
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 1.2rem;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+            color: var(--text-main);
+        }
+
+        .password-toggle:hover {
+            opacity: 1;
+        }
+
+        /* Hero */
+        .container {
+            max-width: 1200px;
+            margin: 36px auto;
+            padding: 0 18px
+        }
+
+        .hero {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            padding: 48px 0
+        }
+
+        .hero-left {
+            flex: 1
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--bg-panel);
+            padding: 6px 12px;
+            border-radius: 8px;
+            color: var(--accent);
+            font-size: 13px;
+            border: 1px solid var(--border)
+        }
+
+        h1 {
+            font-size: 44px;
+            margin: 18px 0;
+            line-height: 1.05
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            max-width: 520px
+        }
+
+        .btn-group {
+            margin-top: 18px;
+            display: flex;
+            gap: 12px
+        }
+
+        .hero-right {
+            width: 460px
+        }
+
+        .hero-card {
+            background: var(--bg-card);
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px var(--shadow)
+        }
+
+        .hero-card img {
+            width: 100%;
+            border-radius: 8px;
+            display: block
+        }
+
+        /* features */
+        .features {
+            background: var(--bg-panel);
+            padding: 36px 24px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid var(--border)
+        }
+
+        .feature-grid {
+            display: flex;
+            gap: 18px;
+            justify-content: center;
+            margin-top: 18px
+        }
+
+        .feature {
+            background: var(--bg-card);
+            padding: 18px;
+            border-radius: 10px;
+            width: 220px;
+            border: 1px solid var(--border)
+        }
+
+        .cta {
+            background: linear-gradient(90deg, var(--accent), #ff7427);
+            color: #fff;
+            padding: 36px;
+            border-radius: 12px;
+            margin: 36px 0;
+            text-align: center
+        }
+
+        /* auth */
+        .center-screen {
+            min-height: 68vh;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 32px;
+            border-radius: 12px;
+            width: 100%;
+            box-shadow: 0 6px 18px var(--shadow);
+            border: 1px solid var(--border)
+        }
+
+        .card h2 {
+            margin: 6px 0 6px
+        }
+
+        .card p {
+            color: var(--text-muted);
+            margin-top: 0
+        }
+
+        .input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-main);
+            margin-top: 12px;
+            outline: none
+        }
+
+        .input:focus {
+            border-color: var(--accent)
+        }
+
+        .muted {
+            color: var(--text-muted);
+            font-size: 14px;
+            text-align: center;
+            margin-top: 12px
+        }
+
+        /* utility */
+        .hidden {
+            display: none
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none
+        }
+
+        footer {
+            height: 60px;
+            color: var(--text-muted);
+            text-align: center
+        }
+
+        /* Admin Layout Overrides */
+        .admin-wrapper {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 36px;
+            padding: 24px 48px;
+            min-height: calc(100vh - 80px);
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .admin-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .admin-main {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .admin-wrapper {
+                grid-template-columns: 1fr;
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo">🗳️ <strong>Anurag X cloudoloG</strong></div>
+        <div class="nav-actions">
+
+            <button class="btn" onclick="window.location.href='index.html'">⬅ Dashboard</button>
+            <!-- Auth buttons removed in favor of centralization -->
+            <div id="auth-buttons" style="display:none;"></div>
+        </div>
+    </div>
+
+    <main id="app">
+        <!-- LOADING -->
+        <section id="loading" class="center-screen container" style="text-align:center; min-height:80vh">
+            <div style="font-size:3rem; animation: pulse 1s infinite">🗳️</div>
+            <p style="color:var(--text-muted); margin-top:1rem">Accessing Voting Booth...</p>
+            <style>
+                @keyframes pulse {
+                    0% {
+                        opacity: 0.6;
+                        transform: scale(0.95)
+                    }
+
+                    50% {
+                        opacity: 1;
+                        transform: scale(1.05)
+                    }
+
+                    100% {
+                        opacity: 0.6;
+                        transform: scale(0.95)
+                    }
+                }
+            </style>
+        </section>
+
+        <!-- Auth Sections Removed: Redirecting to login.html instead -->
+
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="hidden container">
+            <div style="margin: 36px 0; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h2 style="margin:0">Voting Dashboard</h2>
+                    <p style="color:var(--muted);margin:8px 0 0">Welcome, <span id="user-name-display">Student</span>
+                    </p>
+                </div>
+                <button class="btn" onclick="logout()">Sign Out</button>
+            </div>
+
+            <!-- USER HOME VIEW -->
+            <div id="user-dashboard-home"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+                <div class="card" onclick="openActiveElections()"
+                    style="cursor:pointer; text-align:center; padding:30px; border: 1px solid var(--accent); background: linear-gradient(45deg, var(--bg-card), rgba(76, 175, 80, 0.1)); transition:transform 0.2s"
+                    onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="font-size:3rem; margin-bottom:10px">🗳️</div>
+                    <h2 style="margin:0">Active Elections</h2>
+                    <p style="color:var(--text-muted); margin-top:8px">View and vote in live polls</p>
+                </div>
+
+                <div class="card" onclick="openResults()"
+                    style="cursor:pointer; text-align:center; padding:30px; border: 1px solid var(--text-color); background: linear-gradient(45deg, var(--bg-card), rgba(255, 255, 255, 0.05)); transition:transform 0.2s"
+                    onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="font-size:3rem; margin-bottom:10px">🏆</div>
+                    <h2 style="margin:0">Results</h2>
+                    <p style="color:var(--text-muted); margin-top:8px">See winners of past elections</p>
+                </div>
+            </div>
+
+            <!-- ACTIVE ELECTIONS VIEW -->
+            <div id="user-active-elections-view" class="hidden">
+                <button class="btn" onclick="closeActiveElections()" style="margin-bottom:20px">← Back to
+                    Dashboard</button>
+                <div id="voting-area">
+                    <!-- List injected here -->
+                </div>
+            </div>
+
+            <!-- RESULTS LIST VIEW -->
+            <div id="user-results-view" class="hidden">
+                <button class="btn" onclick="closeResults()" style="margin-bottom:20px">← Back to Dashboard</button>
+                <h3 style="border-bottom:1px solid var(--border); padding-bottom:1rem">Past Elections</h3>
+                <div id="results-list-area"
+                    style="display:grid; gap:1.5rem; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); margin-top:1.5rem">
+                    <!-- Ended elections list -->
+                </div>
+            </div>
+
+            <!-- RESULT DETAIL VIEW -->
+            <div id="user-results-detail-view" class="hidden">
+                <button class="btn" onclick="closeResultDetails()" style="margin-bottom:20px">← Back to List</button>
+                <div id="results-detail-area">
+                    <!-- Specific election results -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ADMIN DASHBOARD -->
+        <section id="admin-dashboard" class="hidden">
+            <div
+                style="background:var(--panel); padding: 24px 48px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center;">
+                <h2 style="margin:0; font-size: 1.5rem;">Admin Control Center</h2>
+                <button class="btn" onclick="logout()">Sign Out</button>
+            </div>
+
+            <!-- VIEW 1: ELECTION LIST (ROOMS) -->
+            <!-- VIEW 1: ADMIN HOME -->
+            <div id="admin-view-home" style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+
+                <!-- BOX: ALL ROOMS -->
+                <div class="card" onclick="openAllRooms()"
+                    style="cursor:pointer; text-align:center; padding:30px; margin-bottom: 2rem; border: 1px solid var(--accent); background: linear-gradient(45deg, var(--bg-card), rgba(255, 154, 44, 0.05)); transition:transform 0.2s"
+                    onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="font-size:3rem; margin-bottom:10px">📂</div>
+                    <h2 style="margin:0">All Rooms</h2>
+                    <p style="color:var(--text-muted); margin-top:8px">View and manage all election rooms</p>
+                </div>
+
+                <div style="background:var(--panel); padding:2rem; border-radius:12px; margin-bottom:2rem">
+                    <h3 style="margin-top:0">Create New Election Room</h3>
+
+                    <label style="font-size:0.85rem; color:var(--muted); display:block; margin-bottom:4px">Election
+                        Name</label>
+                    <input id="new-election-name" class="input" type="text" placeholder="e.g. Class Representative 2025"
+                        style="margin-top:0; margin-bottom:12px">
+
+                    <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:start; margin-bottom:16px;">
+                        <div style="flex:0 0 auto;">
+                            <label style="font-size:0.85rem; color:var(--muted); display:block; margin-bottom:4px">Room
+                                Visibility</label>
+                            <select id="new-election-type" class="input"
+                                style="margin-top:0; width:150px; cursor:pointer" onchange="toggleCreationSecret()">
+                                <option value="public">Public 🌍</option>
+                                <option value="private">Private 🔒</option>
+                            </select>
+                        </div>
+
+                        <div id="new-election-secret-wrapper" class="hidden" style="flex:1; min-width:200px;">
+                            <label
+                                style="font-size:0.85rem; color:var(--accent); display:block; margin-bottom:4px">Secret
+                                Access Code</label>
+                            <input id="new-election-secret" class="input" type="text"
+                                placeholder="Required key for users (e.g. 'CS_A_2025')" style="margin-top:0">
+                        </div>
+                    </div>
+
+                    <button onclick="window.createElection()" class="btn filled" style="width:100%">Create Election
+                        Room</button>
+                </div>
+            </div>
+
+            <!-- VIEW 1.5: ALL ROOMS LIST -->
+            <div id="admin-view-all-rooms" class="hidden" style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+                <button class="btn" onclick="closeAllRooms()" style="margin-bottom:20px">← Back to Dashboard</button>
+
+                <h3 style="border-bottom:1px solid var(--border); padding-bottom:1rem">Existing Elections</h3>
+                <div id="election-rooms-list"
+                    style="display:grid; gap:1.5rem; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); margin-top:1.5rem">
+                    <!-- Election Cards Injected Here -->
+                    <p style="color:var(--muted)">Loading elections...</p>
+                </div>
+            </div>
+
+            <!-- VIEW 2: ELECTION DETAILS (Single Room) -->
+            <div id="admin-view-details" class="hidden" style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
+                <div style="margin-bottom:1rem; display:flex; align-items:center; gap:1rem">
+                    <button onclick="window.exitElectionRoom()" class="btn">← Back to Rooms</button>
+                    <h2 id="current-room-title" style="margin:0; color:var(--accent)">Election Name</h2>
+                </div>
+
+                <div class="admin-wrapper"
+                    style="display:grid; grid-template-columns: 300px 1fr; gap:24px; align-items:start;">
+                    <!-- LEFT SIDEBAR -->
+                    <div class="admin-sidebar" style="display:flex; flex-direction:column; gap:24px;">
+                        <!-- ELECTION CONTROLS -->
+                        <div class="card" style="border-left: 4px solid var(--accent);">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <h3 style="margin:0">Status</h3>
+                                    <span id="admin-election-status"
+                                        style="font-weight:bold; color:white; font-size:1.2rem; display:block; margin-top:4px">Loading...</span>
+                                </div>
+                                <div style="font-size:2rem">🚦</div>
+                            </div>
+                            <div id="admin-controls"
+                                style="margin-top:20px; display:flex; gap:10px; flex-direction:column">
+                                <!-- Buttons injected here -->
+                            </div>
+                            <p style="margin:12px 0 0; color:var(--muted); font-size:0.85rem">
+                                Master switch for election visibility.
+                            </p>
+                        </div>
+
+                        <!-- NOTICE BOARD -->
+                        <div class="card">
+                            <h3>📢 Notice Board</h3>
+                            <p style="color:var(--muted); margin-top:0; font-size:0.9rem">Message for "Not Started"
+                                screen.
+                            </p>
+                            <textarea id="admin-notice-input" class="input" rows="4"
+                                placeholder="e.g. 'Voting begins at 10:00 AM...'"
+                                style="resize:vertical; font-family:inherit;"></textarea>
+                            <button class="btn filled" style="margin-top:12px; width:100%"
+                                onclick="updateElectionNotice()">Update Notice</button>
+                        </div>
+
+                        <!-- SETTINGS (Title & Time) -->
+                        <div class="card">
+                            <h3>⚙️ Settings</h3>
+                            <p style="color:var(--muted); margin-top:0; font-size:0.9rem">Edit room details.</p>
+
+                            <label style="font-size:0.8rem; color:var(--muted)">Election Title</label>
+                            <input id="admin-edit-title" class="input" type="text" placeholder="Election Title"
+                                style="margin-top:4px">
+
+                            <label style="font-size:0.8rem; color:var(--muted); display:block; margin-top:12px">Start
+                                Time</label>
+                            <input id="admin-edit-start" class="input" type="datetime-local" style="margin-top:4px">
+
+                            <label style="font-size:0.8rem; color:var(--muted); display:block; margin-top:12px">End
+                                Time</label>
+                            <input id="admin-edit-end" class="input" type="datetime-local" style="margin-top:4px">
+
+                            <label style="font-size:0.8rem; color:var(--muted); display:block; margin-top:12px">Access
+                                Key (Private Rooms)</label>
+                            <input id="admin-edit-secret" class="input" type="text" placeholder="Leave empty if public"
+                                style="margin-top:4px">
+
+                            <button class="btn filled" style="margin-top:16px; width:100%"
+                                onclick="updateElectionSettings()">Save Settings</button>
+                        </div>
+
+                        <!-- LIVE STATS -->
+                        <div class="card">
+                            <h3>📊 Live Stats</h3>
+                            <div style="font-size:3rem; font-weight:bold; color:var(--accent)" id="admin-total-votes">0
+                            </div>
+                            <p style="color:var(--muted); margin:0; font-size:0.9rem">Total Votes Cast</p>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT MAIN CONTENT -->
+                    <div class="admin-main" style="display:flex; flex-direction:column; gap:24px;">
+                        <div class="card">
+                            <h3 style="margin-top:0">Add Candidate</h3>
+                            <form id="add-candidate-form" onsubmit="addCandidate(event)"
+                                style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                                <input id="admin-name" class="input" type="text" placeholder="Candidate Name" required
+                                    style="margin-top:0">
+                                <input id="admin-position" class="input" type="text" placeholder="Position" required
+                                    style="margin-top:0">
+                                <input id="admin-motto" class="input" type="text" placeholder="Motto" required
+                                    style="grid-column: span 2; margin-top:0">
+                                <input id="admin-img" class="input" type="url" placeholder="Image URL (optional)"
+                                    style="grid-column: span 2; margin-top:0">
+                                <button id="btn-add-candidate" type="submit" class="btn filled"
+                                    style="grid-column: span 2; padding: 14px">Add
+                                    Candidate to Room</button>
+                            </form>
+                        </div>
+
+                        <div>
+                            <h3 style="margin-bottom:16px">Manage Candidates</h3>
+                            <div id="admin-candidates-list"
+                                style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:16px;">
+                                <!-- Admin Candidate List -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer style="display:flex; justify-content:center; align-items:center; flex-direction:column;">
+        <div>&copy; 2024 Anurag Voting System</div>
+        <div style="font-size:0.75rem; opacity:0.5; margin-top:4px">v1.1 - Light Mode Enabled</div>
+    </footer>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc, doc, runTransaction, setDoc, getDoc, onSnapshot, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // TODO: Replace the following with your app's Firebase project configuration
+        // See: https://firebase.google.com/docs/web/setup#config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzvvkr99HGqS7LWg3_3wrquuo9mtVNPso",
+            authDomain: "nrp-tejas26-cloudolog.firebaseapp.com",
+            projectId: "nrp-tejas26-cloudolog",
+            storageBucket: "nrp-tejas26-cloudolog.firebasestorage.app",
+            messagingSenderId: "56277375228",
+            appId: "1:56277375228:web:7ab38fad10b825329bdf79",
+            measurementId: "G-WJQBB27LT6"
+        };
+
+        // Initialize Firebase
+        let db;
+        let auth;
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            console.log("Firebase initialized");
+
+            // --- AUTH STATE LISTENER (Adapter for Legacy Code) ---
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    if (user.email === 'admin@anurag.edu.in' || user.email === 'canteen@anurag.edu.in' || user.email === 'voting@anurag.edu.in') {
+                        const adminUser = { name: 'Admin', email: user.email, role: 'admin' };
+                        setSession(adminUser);
+                        showPage('admin-dashboard');
+                    } else {
+                        // Fetch Firestore Data (for hasVoted status)
+                        try {
+                            const userDocRef = doc(db, "users", user.uid);
+                            const userSnap = await getDoc(userDocRef);
+                            let userData = userSnap.exists() ? userSnap.data() : { name: user.displayName, email: user.email };
+
+                            // COMPATIBILITY MAPPING
+                            userData.firestoreId = user.uid;
+                            if (!userData.name) userData.name = user.displayName;
+
+                            setSession(userData);
+                            showPage('dashboard');
+                        } catch (e) {
+                            console.error("Error fetching user data", e);
+                            // FALLBACK: If Firestore fails, still let user in with basic Auth data
+                            const fallback = {
+                                name: user.displayName || user.email.split('@')[0],
+                                email: user.email,
+                                firestoreId: user.uid
+                            };
+                            setSession(fallback);
+                            showPage('dashboard');
+                        }
+                    }
+                } else {
+                    window.location.href = 'login.html';
+                }
+            });
+
+        } catch (e) {
+            console.error("Firebase init error (Did you set up the config?):", e);
+            alert("Firebase Configuration Missing! Please edit the code to add your Firebase Config.");
+        }
+
+        const SESSION_KEY = 'anurag_voting_session_fb';
+
+        // --- UTILS ---
+        function getSession() {
+            return JSON.parse(localStorage.getItem(SESSION_KEY));
+        }
+
+        function setSession(user) {
+            // We only store minimal info in session. State of 'hasVoted' is one-time loaded or refreshed from DB.
+            localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+        }
+
+        window.togglePassword = function (inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                btn.innerText = "🔒"; // Lock icon to imply 'hide/secure'
+                btn.title = "Hide Password";
+            } else {
+                input.type = "password";
+                btn.innerText = "👁️";
+                btn.title = "Show Password";
+            }
+        }
+
+        // --- NAVIGATION ---
+        window.showPage = function (page) {
+            document.querySelectorAll('#app > section').forEach(s => s.classList.add('hidden'));
+            const el = document.getElementById(page);
+            if (el) el.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            const authButtons = document.getElementById('auth-buttons');
+            if (session) {
+                authButtons.innerHTML = `<span style="margin-right:12px;color:var(--muted)">Hello, ${session.name}</span>`;
+            }
+
+            if (page === 'dashboard') {
+                if (!session) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                renderDashboard();
+            } else if (page === 'admin-dashboard') {
+                // Basic security check (client-side only, real security via Rules)
+                if (!session || (session.email !== 'admin@anurag.edu.in' && session.email !== 'voting@anurag.edu.in')) {
+                    alert('Unauthorized');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                renderAdminDashboard();
+            }
+        }
+
+        // --- AUTH ---
+        window.handleSignup = async function (e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const id = document.getElementById('signup-id').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirm = document.getElementById('signup-confirm-password').value;
+
+            if (!email.endsWith('@anurag.edu.in')) {
+                alert('Error: Email must be a valid @anurag.edu.in address.');
+                return;
+            }
+
+            if (password !== confirm) {
+                alert('Error: Passwords do not match.');
+                return;
+            }
+
+            try {
+                // Check if user exists
+                const q = query(collection(db, "users"), where("email", "==", email));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    alert('User already exists!');
+                    return;
+                }
+
+                // Create User Document
+                await addDoc(collection(db, "users"), {
+                    name: name,
+                    collegeId: id,
+                    email: email,
+                    password: password, // In production, never store plaintext passwords!
+                    hasVoted: false
+                });
+
+                alert('Account created! Please sign in.');
+                showPage('auth');
+
+            } catch (err) {
+                console.error(err);
+                alert('Signup Failed: ' + err.message);
+            }
+        }
+
+        import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // ... (existing code)
+
+        window.handleLogin = async function (e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                // Use Firebase Auth for ALL logins (Admins & Students)
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Admin Routing
+                if (user.email === 'admin@anurag.edu.in' || user.email === 'voting@anurag.edu.in') {
+                    const adminUser = { name: 'Admin', email: user.email, role: 'admin' };
+                    setSession(adminUser);
+                    showPage('admin-dashboard');
+                    return;
+                }
+
+                // Student Routing
+                // Fetch User Details from Firestore (optional, for Display Name)
+                let userData = {
+                    name: user.displayName || user.email.split('@')[0],
+                    email: user.email,
+                    firestoreId: user.uid
+                };
+
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        const data = userDoc.data();
+                        userData = { ...userData, ...data, firestoreId: user.uid };
+                    }
+                } catch (fetchErr) {
+                    console.log("Firestore profile fetch failed, using basic auth info", fetchErr);
+                }
+
+                setSession(userData);
+                showPage('dashboard');
+
+            } catch (err) {
+                console.error(err);
+                alert('Login Failed: ' + getErrorMessage(err.code));
+            }
+        }
+
+        function getErrorMessage(code) {
+            switch (code) {
+                case 'auth/invalid-credential': return "Invalid email or password.";
+                case 'auth/user-not-found': return "No user found with this email.";
+                case 'auth/wrong-password': return "Incorrect password.";
+                default: return code;
+            }
+        }
+
+        window.logout = function () {
+            signOut(auth).then(() => {
+                localStorage.removeItem(SESSION_KEY);
+                window.location.href = 'login.html';
+            });
+        }
+
+        // --- ADMIN ---
+        // --- ADMIN MULTI-ROOM ACTIONS ---
+
+        // 1. ADD / UPDATE CANDIDATE TO ROOM
+        window.addCandidate = async function (e) {
+            e.preventDefault();
+            if (!currentAdminElectionId) return alert("Error: No room selected. Please return to Rooms List.");
+
+            const name = document.getElementById('admin-name').value;
+            const position = document.getElementById('admin-position').value;
+            const motto = document.getElementById('admin-motto').value;
+            const img = document.getElementById('admin-img').value;
+
+            try {
+                if (window.editCandidate && editingCandidateId) {
+                    // UPDATE EXISTING
+                    await setDoc(doc(db, "candidates", editingCandidateId), {
+                        name, position, motto, img: img || ""
+                    }, { merge: true });
+                    alert('Candidate Updated!');
+                    window.cancelEditCandidate();
+                } else {
+                    // CREATE NEW
+                    await addDoc(collection(db, "candidates"), {
+                        electionId: currentAdminElectionId, // LINKED TO ROOM
+                        name, position, motto, img: img || "", voteCount: 0
+                    });
+                    alert('Candidate Added to Room!');
+                    e.target.reset();
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error: ' + err.message);
+            }
+        }
+
+        // 2. DELETE CANDIDATE
+        window.deleteCandidate = async function (id) {
+            if (!confirm('Are you sure you want to delete this candidate?')) return;
+            try {
+                await deleteDoc(doc(db, "candidates", id));
+            } catch (err) {
+                alert('Error deleting: ' + err.message);
+            }
+        }
+
+        // 3. UPDATE ELECTION STATUS
+        // 3. UPDATE ELECTION STATUS
+        window.updateElectionStatus = async function (status) {
+            if (!currentAdminElectionId) return alert("Error: No election selected.");
+
+            const action = status === 'active' ? "Starting election" : (status === 'ended' ? "Ending election" : "Updating status");
+            if (status === 'active' && !confirm("Starting election? Users can vote now.")) return;
+            if (status === 'ended' && !confirm("End election? Results will be final.")) return;
+
+            try {
+                // Update Specific Election Doc
+                await setDoc(doc(db, "elections", currentAdminElectionId), { status: status }, { merge: true });
+                alert(`Success: Election is now ${status.toUpperCase()}!`);
+            } catch (e) {
+                console.error(e);
+                alert("Error updating status: " + e.message);
+            }
+        }
+
+        // 5. UPDATE ELECTION SETTINGS (Title, Times, Secret)
+        window.updateElectionSettings = async function () {
+            if (!currentAdminElectionId) return;
+            const newTitle = document.getElementById('admin-edit-title').value;
+            const startTime = document.getElementById('admin-edit-start').value;
+            const endTime = document.getElementById('admin-edit-end').value;
+            const secret = document.getElementById('admin-edit-secret').value;
+
+            if (!newTitle) return alert("Title cannot be empty");
+
+            try {
+                await setDoc(doc(db, "elections", currentAdminElectionId), {
+                    electionTitle: newTitle,
+                    startTime: startTime,
+                    endTime: endTime,
+                    secretKey: secret // Can be empty if public
+                }, { merge: true });
+                alert("Settings Saved!");
+
+                // Update header immediately for better UX
+                document.getElementById('current-room-title').innerText = newTitle;
+            } catch (e) {
+                alert("Error updating settings: " + e.message);
+            }
+        }
+
+        // 6. EDIT CANDIDATE
+        let editingCandidateId = null;
+
+        window.editCandidate = function (id, name, position, motto, img) {
+            editingCandidateId = id;
+            document.getElementById('admin-name').value = name;
+            document.getElementById('admin-position').value = position;
+            document.getElementById('admin-motto').value = motto;
+            document.getElementById('admin-img').value = img;
+
+            const btn = document.getElementById('btn-add-candidate');
+            btn.innerText = "Update Candidate";
+            btn.classList.remove('filled');
+            btn.style.border = "1px solid var(--accent)";
+            btn.style.color = "var(--accent)";
+
+            // Scroll to form
+            document.getElementById('admin-name').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.cancelEditCandidate = function () {
+            editingCandidateId = null;
+            document.getElementById('add-candidate-form').reset();
+            const btn = document.getElementById('btn-add-candidate');
+            btn.innerText = "Add Candidate to Room";
+            btn.classList.add('filled');
+            btn.style.border = "none";
+            btn.style.color = "white";
+        }
+
+        // 4. UPDATE NOTICE
+        window.updateElectionNotice = async function () {
+            if (!currentAdminElectionId) return;
+            const msg = document.getElementById('admin-notice-input').value;
+            try {
+                await setDoc(doc(db, "elections", currentAdminElectionId), { noticeMessage: msg }, { merge: true });
+                alert("Notice Updated!");
+            } catch (e) {
+                alert("Error updating notice: " + e.message);
+            }
+        }
+
+        // LEGACY FUNCTION - Disabled or Redirected
+        window.startNewElection = function () {
+            alert("Please use the 'Create New Election Room' feature in the Rooms List.");
+        }
+
+        // --- ADMIN MULTI-ROOM LOGIC ---
+        let currentAdminElectionId = null;
+        let adminUnsubSettings = null;
+        let adminUnsubCandidates = null;
+
+        // 1. ENTRY POINT
+        function renderAdminDashboard() {
+            document.getElementById('admin-view-home').classList.remove('hidden');
+            document.getElementById('admin-view-all-rooms').classList.add('hidden');
+            document.getElementById('admin-view-details').classList.add('hidden');
+        }
+
+        window.openAllRooms = function () {
+            document.getElementById('admin-view-home').classList.add('hidden');
+            document.getElementById('admin-view-all-rooms').classList.remove('hidden');
+            loadElectionsList();
+        }
+
+        window.closeAllRooms = function () {
+            document.getElementById('admin-view-all-rooms').classList.add('hidden');
+            document.getElementById('admin-view-home').classList.remove('hidden');
+        }
+
+        // 2. LOAD ELECTIONS LIST
+        // 2. LOAD ELECTIONS LIST (Robust Fetch Mode)
+        window.loadElectionsList = async function () {
+            console.log("Attempting to fetch elections list via getDocs...");
+            const listDiv = document.getElementById('election-rooms-list');
+            if (!listDiv) return;
+
+            listDiv.innerHTML = '<p class="text-gray-500">Fetching elections from database...</p>';
+
+            try {
+                const snapshot = await getDocs(collection(db, "elections"));
+
+                if (snapshot.empty) {
+                    listDiv.innerHTML = '<p class="text-gray-500">No election rooms found. Try creating one above.</p>';
+                    return;
+                }
+
+                listDiv.innerHTML = '';
+
+                // Sort: Newest First
+                const sortedDocs = [...snapshot.docs].sort((a, b) => {
+                    const getMs = (d) => {
+                        const val = d.data().createdAt;
+                        if (val && typeof val.toDate === 'function') return val.toDate().getTime();
+                        if (val && val.seconds) return val.seconds * 1000;
+                        if (val) return new Date(val).getTime();
+                        return 0;
+                    };
+                    return getMs(b) - getMs(a);
+                });
+
+                sortedDocs.forEach(doc => {
+                    const data = doc.data();
+                    let created = 'Unknown';
+                    try {
+                        if (data.createdAt && typeof data.createdAt.toDate === 'function') {
+                            created = data.createdAt.toDate().toLocaleDateString();
+                        } else if (data.createdAt && data.createdAt.seconds) {
+                            created = new Date(data.createdAt.seconds * 1000).toLocaleDateString();
+                        } else if (data.createdAt) {
+                            created = new Date(data.createdAt).toLocaleDateString();
+                        }
+                    } catch (e) { console.warn("Date error", e); }
+
+                    const statusColor = data.status === 'active' ? 'green' : (data.status === 'ended' ? 'red' : 'white');
+                    const statusText = (data.status || 'Not Started').toUpperCase();
+                    const safeId = doc.id;
+                    const visibilityIcon = data.roomType === 'private' ? '🔒' : '🌍';
+
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.style.cursor = 'pointer';
+                    card.style.border = `1px solid ${statusColor}`;
+
+                    card.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <h3 style="margin:0; font-size:1.2rem">${data.electionTitle || data.name || 'Untitled'}</h3>
+                            <span style="color:${statusColor}; font-weight:bold; font-size:0.75rem; border:1px solid ${statusColor}; padding:2px 8px; border-radius:12px">${statusText}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px">
+                             <p style="color:var(--muted); font-size:0.8rem; margin:0">Created: ${created}</p>
+                             <span title="${data.roomType === 'private' ? 'Private Room' : 'Public Room'}">${visibilityIcon}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px">
+                            <button class="btn small" style="color:red; border:1px solid red; padding:4px 8px; font-size:0.8rem" onclick="event.stopPropagation(); deleteElectionRoom('${safeId}')">Delete Room</button>
+                            <span style="font-size:0.9rem; text-decoration:underline">Manage Room →</span>
+                        </div>
+                    `;
+                    card.onclick = () => enterElectionRoom(safeId, data.electionTitle || data.name);
+                    listDiv.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error("Error loading elections:", error);
+                listDiv.innerHTML = `<div style="text-align:center; padding:20px; border:1px solid red; color:red; border-radius:8px">
+                    <h3>Connection Failed</h3>
+                    <p>${error.message}</p>
+                    <button class="btn small" style="margin-top:10px" onclick="loadElectionsList()">Try Again</button>
+                </div>`;
+            }
+        }
+
+        // 2.5 DELETE ELECTION
+        window.deleteElectionRoom = async function (id) {
+            if (!confirm("Are you sure you want to delete this election room? This will also remove all candidates permanently. This action cannot be undone.")) return;
+
+            try {
+                // 1. Delete all candidates in this election
+                const batch = writeBatch(db);
+                const q = query(collection(db, "candidates"), where("electionId", "==", id));
+                const candidatesSnap = await getDocs(q);
+
+                candidatesSnap.forEach((doc) => {
+                    batch.delete(doc.ref);
+                });
+
+                // 2. Delete the election doc itself
+                batch.delete(doc(db, "elections", id));
+
+                // Commit Batch
+                await batch.commit();
+
+                alert("Election Room Deleted Successfully.");
+            } catch (e) {
+                console.error(e);
+                alert("Error deleting room: " + e.message);
+            }
+        }
+
+        // 3. CREATE ELECTION
+        window.toggleCreationSecret = function () {
+            const type = document.getElementById('new-election-type').value;
+            const wrapper = document.getElementById('new-election-secret-wrapper');
+            if (type === 'private') {
+                wrapper.classList.remove('hidden');
+                document.getElementById('new-election-secret').setAttribute('required', 'true');
+            } else {
+                wrapper.classList.add('hidden');
+                document.getElementById('new-election-secret').removeAttribute('required');
+            }
+        }
+
+        window.createElection = async function () {
+            const name = document.getElementById('new-election-name').value;
+            const type = document.getElementById('new-election-type').value;
+            const secret = document.getElementById('new-election-secret').value;
+
+            if (!name) return alert("Enter a name!");
+            if (type === 'private' && !secret) return alert("Secret Access Code is required for private rooms!");
+
+            try {
+                await addDoc(collection(db, "elections"), {
+                    electionTitle: name,
+                    status: 'not_started',
+                    createdAt: new Date(),
+                    noticeMessage: 'Voting starts soon.',
+                    startTime: '',
+                    endTime: '',
+                    roomType: type, // 'public' or 'private'
+                    secretKey: type === 'private' ? secret : ''
+                });
+                // Reset form
+                document.getElementById('new-election-name').value = '';
+                document.getElementById('new-election-type').value = 'public';
+                document.getElementById('new-election-secret').value = '';
+                window.toggleCreationSecret();
+
+                alert("Room Created!");
+            } catch (e) {
+                alert("Error: " + e.message);
+            }
+        }
+
+        window.enterElectionRoom = function (id, title) {
+            currentAdminElectionId = id;
+            const titleDisplay = document.getElementById('current-room-title');
+            if (titleDisplay) titleDisplay.innerText = title;
+
+            // Hide others
+            document.getElementById('admin-view-home').classList.add('hidden');
+            document.getElementById('admin-view-all-rooms').classList.add('hidden');
+
+            // Show Details
+            document.getElementById('admin-view-details').classList.remove('hidden');
+
+            // Reset Edit Mode
+            if (window.cancelEditCandidate) window.cancelEditCandidate();
+
+            startRoomListeners(id);
+        }
+
+        window.exitElectionRoom = function () {
+            currentAdminElectionId = null;
+            if (adminUnsubSettings) adminUnsubSettings();
+            if (adminUnsubCandidates) adminUnsubCandidates();
+
+            document.getElementById('admin-view-details').classList.add('hidden');
+            // Return to Rooms List
+            document.getElementById('admin-view-all-rooms').classList.remove('hidden');
+            // document.getElementById('admin-view-home').classList.remove('hidden'); // Optional if we want to go home
+        }
+
+        function startRoomListeners(id) {
+            const statusSpan = document.getElementById('admin-election-status');
+            const controlsDiv = document.getElementById('admin-controls');
+            const noticeInput = document.getElementById('admin-notice-input');
+            const list = document.getElementById('admin-candidates-list');
+            const totalDisplay = document.getElementById('admin-total-votes');
+
+            // Settings Inputs
+            const titleInput = document.getElementById('admin-edit-title');
+            const startInput = document.getElementById('admin-edit-start');
+            const endInput = document.getElementById('admin-edit-end');
+            const secretInput = document.getElementById('admin-edit-secret');
+
+            // A. SETTINGS LISTENER
+            adminUnsubSettings = onSnapshot(doc(db, "elections", id), (docSnapshot) => {
+                if (!docSnapshot.exists()) return;
+                const data = docSnapshot.data();
+
+                if (noticeInput && document.activeElement !== noticeInput) {
+                    noticeInput.value = data.noticeMessage || '';
+                }
+
+                // Populate Settings if not focused
+                if (titleInput && document.activeElement !== titleInput) titleInput.value = data.electionTitle || '';
+                if (startInput && document.activeElement !== startInput) startInput.value = data.startTime || '';
+                if (endInput && document.activeElement !== endInput) endInput.value = data.endTime || '';
+                if (secretInput && document.activeElement !== secretInput) secretInput.value = data.secretKey || ''; // Show secret
+
+                let color = 'white';
+                let buttons = '';
+                const status = data.status || 'not_started';
+
+                if (status === 'not_started') {
+                    color = 'orange';
+                    statusSpan.innerText = "NOT STARTED";
+                    buttons = `<button class="btn filled" onclick="updateElectionStatus('active')">Start Election</button>`;
+                } else if (status === 'active') {
+                    color = '#4CAF50';
+                    statusSpan.innerText = "ACTIVE";
+                    buttons = `<button class="btn" style="border:1px solid red; color:red" onclick="updateElectionStatus('ended')">End Election</button>`;
+                } else if (status === 'ended') {
+                    color = 'red';
+                    statusSpan.innerText = "ENDED";
+                    buttons = `<button class="btn" style="color:orange; border:1px solid orange" onclick="updateElectionStatus('active')">Re-open Election</button>`;
+                }
+                statusSpan.style.color = color;
+                if (controlsDiv) controlsDiv.innerHTML = buttons;
+            });
+
+            // B. CANDIDATES LISTENER
+            const q = query(collection(db, "candidates"), where("electionId", "==", id));
+            adminUnsubCandidates = onSnapshot(q, (snap) => {
+                list.innerHTML = '';
+                let totalVotes = 0;
+
+                if (snap.empty) {
+                    list.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:gray">No candidates in this room.</p>';
+                    if (totalDisplay) totalDisplay.innerText = '0';
+                    return;
+                }
+
+                snap.forEach(docSnap => {
+                    const c = docSnap.data();
+                    totalVotes += (c.voteCount || 0);
+
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.style.display = 'flex';
+                    card.style.justifyContent = 'space-between';
+                    card.style.alignItems = 'center';
+
+                    const imgUrl = c.img && c.img.length > 5 ? c.img : `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=random&color=fff`;
+
+                    // Escape quotes for onclick
+                    const safeName = c.name.replace(/'/g, "\\'");
+                    const safePos = (c.position || "").replace(/'/g, "\\'");
+                    const safeMotto = (c.motto || "").replace(/'/g, "\\'");
+                    const safeImg = (c.img || "").replace(/'/g, "\\'");
+
+                    card.innerHTML = `
+                        <div style="display:flex; align-items:center; gap:12px">
+                             <img src="${imgUrl}" style="width:50px; height:50px; border-radius:50%; object-fit:cover; background:#333">
+                             <div>
+                                <h4 style="margin:0">${c.name}</h4>
+                                <span style="font-size:0.8rem; color:var(--accent)">${c.position}</span>
+                             </div>
+                        </div>
+                        <div style="text-align:right; display:flex; flex-direction:column; gap:4px; align-items:flex-end">
+                             <div style="font-weight:bold">${c.voteCount || 0} Votes</div>
+                             <div style="display:flex; gap:8px">
+                                 <button onclick="editCandidate('${docSnap.id}', '${safeName}', '${safePos}', '${safeMotto}', '${safeImg}')" class="btn small" style="padding:2px 8px; font-size:0.7rem">Edit</button>
+                                 <button onclick="window.deleteCandidate('${docSnap.id}')" class="btn small" style="color:red; padding:2px 8px; font-size:0.7rem">Remove</button>
+                             </div>
+                        </div>
+                    `;
+                    list.appendChild(card);
+                });
+                if (totalDisplay) totalDisplay.innerText = totalVotes;
+            });
+        }
+
+        // --- VOTING (MULTI-ROOM SUPPORTED) ---
+        let currentUserVotesUnsub = null;
+        window.dashboardUnsub = null;
+
+        // 1. DASHBOARD ENTRY (HOME BOX)
+        async function renderDashboard() {
+            const session = getSession();
+            // Update Header Name
+            document.getElementById('user-name-display').innerText = session.name;
+            const dashboardTitle = document.querySelector('#dashboard h2');
+            if (dashboardTitle) dashboardTitle.innerText = "Voting Dashboard";
+
+            // Show Home Box, Hide Lists
+            document.getElementById('user-dashboard-home').classList.remove('hidden');
+            document.getElementById('user-active-elections-view').classList.add('hidden');
+            document.getElementById('user-results-view').classList.add('hidden');
+            document.getElementById('user-results-detail-view').classList.add('hidden');
+
+            // Cleanup any active listeners to save resources
+            if (currentUserVotesUnsub) { currentUserVotesUnsub(); currentUserVotesUnsub = null; }
+            if (window.dashboardUnsub) { window.dashboardUnsub(); window.dashboardUnsub = null; }
+
+            // Remove any lingering back buttons from previous deep navigation
+            const backBtn = document.getElementById('back-to-list-btn');
+            if (backBtn) backBtn.remove();
+        }
+
+        // 2. OPEN ACTIVE ELECTIONS LIST
+        window.openActiveElections = function () {
+            // UI Switch
+            document.getElementById('user-dashboard-home').classList.add('hidden');
+            document.getElementById('user-active-elections-view').classList.remove('hidden');
+
+            const container = document.getElementById('voting-area');
+            const dashboardTitle = document.querySelector('#dashboard h2');
+
+            // Cleanup previous
+            if (window.dashboardUnsub) { window.dashboardUnsub(); }
+            if (document.getElementById('back-to-list-btn')) document.getElementById('back-to-list-btn').remove();
+
+            container.innerHTML = '<p style="text-align:center;color:var(--muted)">Syncing active elections...</p>';
+
+            // Start Sync
+            const q = query(collection(db, "elections"), where("status", "==", "active"));
+
+            window.dashboardUnsub = onSnapshot(q, (snap) => {
+                if (snap.empty) {
+                    renderNoElections(container);
+                    if (dashboardTitle) dashboardTitle.innerText = "Active Elections";
+                    return;
+                }
+                // Show Election List
+                renderElectionList(container, snap.docs);
+                if (dashboardTitle) dashboardTitle.innerText = "Active Elections";
+            }, (error) => {
+                console.error("Dashboard Sync Error:", error);
+                container.innerHTML = `
+                    <div style="text-align:center; padding:2rem; color: #ff6b6b">
+                        <h3>Sync Failed</h3>
+                        <p>Unable to connect to live election feed.</p>
+                        <button class="btn" style="margin-top:1rem" onclick="openActiveElections()">Retry Connection</button>
+                    </div>
+                `;
+            });
+        }
+
+        window.closeActiveElections = function () {
+            renderDashboard(); // Go back to home state
+        }
+
+        // 3. OPEN RESULTS LIST
+        window.openResults = async function () {
+            document.getElementById('user-dashboard-home').classList.add('hidden');
+            document.getElementById('user-results-view').classList.remove('hidden');
+
+            const container = document.getElementById('results-list-area');
+            container.innerHTML = '<p style="color:var(--muted)">Loading past elections...</p>';
+
+            try {
+                const q = query(collection(db, "elections"), where("status", "==", "ended"));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    container.innerHTML = '<p>No past elections found.</p>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.style.cursor = 'pointer';
+                    card.style.border = '1px solid var(--muted)';
+
+                    const safeTitle = (data.electionTitle || 'Untitled').replace(/'/g, "\\'");
+
+                    card.innerHTML = `
+                        <h3>${data.electionTitle || 'Untitled'}</h3>
+                        <p style="color:var(--muted); font-size:0.9rem">Ended on: ${data.endTime ? new Date(data.endTime).toLocaleDateString() : 'Unknown'}</p>
+                        <div style="margin-top:12px; font-weight:bold; color:var(--accent)">View Results →</div>
+                    `;
+                    card.onclick = () => viewElectionResultDetails(docSnap.id, safeTitle);
+                    container.appendChild(card);
+                });
+
+            } catch (e) {
+                console.error(e);
+                container.innerHTML = '<p style="color:red">Error loading results.</p>';
+            }
+        }
+
+        window.closeResults = function () {
+            renderDashboard();
+        }
+
+        // 4. VIEW SPECIFIC RESULT DETAIL
+        window.viewElectionResultDetails = function (electionId, title) {
+            document.getElementById('user-results-view').classList.add('hidden');
+            document.getElementById('user-results-detail-view').classList.remove('hidden');
+
+            const container = document.getElementById('results-detail-area');
+            container.innerHTML = `<h2>${title} - Final Results</h2><p>Loading counts...</p>`;
+
+            // Listen for candidates in this election
+            const q = query(collection(db, "candidates"), where("electionId", "==", electionId));
+
+            onSnapshot(q, (snap) => {
+                if (snap.empty) {
+                    container.innerHTML = `<h2>${title}</h2><p>No candidates were in this election.</p>`;
+                    return;
+                }
+
+                // Sort by vote count descending
+                const candidates = [];
+                snap.forEach(d => candidates.push(d.data()));
+                candidates.sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0));
+
+                let html = `<h2>${title} <span style="font-size:1rem;color:red;border:1px solid red;padding:2px 8px;border-radius:10px">ENDED</span></h2>`;
+                html += '<div style="display:flex; flex-direction:column; gap:16px; margin-top:20px;">';
+
+                candidates.forEach((c, index) => {
+                    const isWinner = index === 0 && (c.voteCount || 0) > 0;
+                    const medal = index === 0 ? '🥇' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : ''));
+
+                    html += `
+                        <div class="card" style="display:flex; align-items:center; border: ${isWinner ? '2px solid gold' : '1px solid var(--border)'}">
+                            <div style="font-size:2rem; width:50px; text-align:center">${medal}</div>
+                            <img src="${c.img || ''}" onerror="this.style.display='none'" style="width:60px; height:60px; border-radius:50%; object-fit:cover; margin-right:16px; background:#333">
+                            <div style="flex:1">
+                                <h3 style="margin:0">${c.name} ${isWinner ? '<span style="color:gold; font-size:0.8rem">WINNER</span>' : ''}</h3>
+                                <p style="margin:0; color:var(--muted)">${c.position}</p>
+                            </div>
+                            <div style="font-size:1.5rem; font-weight:bold">${c.voteCount || 0}</div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                container.innerHTML = html;
+            });
+        }
+
+        window.closeResultDetails = function () {
+            document.getElementById('user-results-detail-view').classList.add('hidden');
+            document.getElementById('user-results-view').classList.remove('hidden');
+            // Stop listener if we wanted strict cleanup, but onSnapshot returns unsub... 
+            // For simplicity in this user flow, we allow the socket to persist until next navigation or dashboard reset.
+        }
+
+        function renderNoElections(container) {
+            container.innerHTML = `
+                <div style="text-align:center; padding:3rem 1rem;">
+                    <h2 style="color:var(--accent)">No Active Elections</h2>
+                    <p>There are no polls currently open.</p>
+                    <div style="margin-top:20px; font-size:2rem">⏳</div>
+                </div>
+            `;
+        }
+
+        function renderElectionList(container, docs) {
+            let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:24px;">';
+
+            docs.forEach(docSnap => {
+                const data = docSnap.data();
+                const id = docSnap.id;
+                const isPrivate = data.roomType === 'private';
+                const lockIcon = isPrivate ? '🔒' : '';
+
+                // We pass the secret key conceptually, but safely we will just read it from the doc in memory when checking
+                // To avoid passing secret in HTML, we handle the click check against the data object which we have here.
+                // We'll expose a wrapper.
+
+                // Escape simple quotes for the onclick params
+                const safeTitle = (data.electionTitle || 'Untitled').replace(/'/g, "\\'");
+                const safeKey = (data.secretKey || '').replace(/'/g, "\\'"); // Pass key to function to validate immediately (client-side)
+
+                html += `
+                    <div class="card" onclick="window.handleRoomEntry('${id}', '${safeTitle}', '${data.roomType}', '${safeKey}')" style="cursor:pointer; transition:transform 0.2s; border: 1px solid ${isPrivate ? 'var(--accent)' : 'var(--border)'}">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px">
+                             <div style="display:flex; align-items:center; gap:8px">
+                                <h3 style="margin:0">${data.electionTitle || 'Untitled'}</h3>
+                                ${isPrivate ? '<span style="background:var(--accent); color:black; padding:2px 6px; border-radius:4px; font-size:0.7rem; font-weight:bold">PRIVATE</span>' : ''}
+                             </div>
+                             <span style="font-size:1.5rem">${isPrivate ? '🔐' : '🗳️'}</span>
+                        </div>
+                        <p style="color:var(--muted); font-size:0.9rem">${data.noticeMessage || 'Click to enter.'}</p>
+                        ${data.startTime ? `<p style="font-size:0.8rem; margin-top:8px; opacity:0.7">Starts: ${new Date(data.startTime).toLocaleString()}</p>` : ''}
+                        ${data.endTime ? `<p style="font-size:0.8rem; opacity:0.7">Ends: ${new Date(data.endTime).toLocaleString()}</p>` : ''}
+                        <button class="btn filled" style="width:100%; margin-top:16px">${isPrivate ? 'Unlock & Enter' : 'Enter Election'}</button>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        window.handleRoomEntry = function (id, title, type, realKey) {
+            if (type === 'private') {
+                const userKey = prompt(`🔒 This is a private election room.\nPlease enter the access code for "${title}":`);
+                if (userKey === null) return; // Cancelled
+
+                // Simple string comparison (case-insensitive)
+                if (userKey.trim().toUpperCase() !== realKey.trim().toUpperCase()) {
+                    alert('❌ Access Denied: Invalid Access Code.');
+                    return;
+                }
+            }
+            // If public or key matches
+            window.openElectionVote(id, title);
+        }
+
+        window.openElectionVote = function (electionId, title) {
+            const container = document.getElementById('voting-area');
+            const dashboardTitle = document.querySelector('#dashboard h2');
+            if (dashboardTitle) dashboardTitle.innerText = title;
+
+            // Add Back Button
+            const header = document.querySelector('#dashboard > div');
+            if (!document.getElementById('back-to-list-btn')) {
+                const backBtn = document.createElement('button');
+                backBtn.id = 'back-to-list-btn';
+                backBtn.className = 'btn';
+                backBtn.innerText = '← Back';
+                backBtn.onclick = () => openActiveElections(); // Reload list
+                backBtn.style.marginRight = '12px';
+                header.insertBefore(backBtn, header.firstChild);
+            }
+
+            container.innerHTML = '<p style="text-align:center">Loading Ballot...</p>';
+            renderVotingInterface(container, electionId);
+        }
+
+        async function renderVotingInterface(container, electionId) {
+            const session = getSession();
+
+            // Check if user already voted in THIS election
+            const voteRef = doc(db, "users", session.firestoreId, "votes", electionId);
+
+            // Real-time listener for "My Vote"
+            if (currentUserVotesUnsub) currentUserVotesUnsub();
+            currentUserVotesUnsub = onSnapshot(voteRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const voteData = docSnap.data();
+                    container.innerHTML = `
+                        <div style="text-align:center; padding:3rem 1rem;">
+                            <h2 style="color:var(--accent)">Vote Submitted!</h2>
+                            <p>You voted for <b>${voteData.candidateName}</b> in this election.</p>
+                            <p style="margin-top:1rem; font-size:0.8rem; color:var(--muted)">Thank you for participating.</p>
+                            <div style="margin-top:20px; font-size:3rem">🗳️</div>
+                         </div>
+                     `;
+                } else {
+                    renderVotingList(container, electionId);
+                }
+            });
+        }
+
+
+        // Simpler Live Results removed for now to focus on Voting flow for Multi-Room. 
+        // Admin sees results in their dashboard.
+
+        function renderVotingList(container, electionId) {
+            const q = query(collection(db, "candidates"), where("electionId", "==", electionId));
+
+            onSnapshot(q, (candidatesSnap) => {
+                let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">';
+
+                if (candidatesSnap.empty) {
+                    container.innerHTML = '<p style="text-align:center; padding: 2rem;">No candidates available yet.</p>';
+                    return;
+                }
+
+                candidatesSnap.forEach(doc => {
+                    const c = doc.data();
+                    const id = doc.id;
+                    const imgUrl = c.img && c.img.length > 5 ? c.img : `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=random&color=fff`;
+
+                    html += `
+                    <div class="card candidate-card" style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+                        <img src="${imgUrl}" alt="${c.name}" class="candidate-img" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid var(--accent); margin-bottom:12px">
+                        <div class="candidate-info" style="width:100%">
+                            <h3>${c.name}</h3>
+                            <p style="color:var(--accent); font-weight:bold; margin-bottom:8px">${c.position}</p>
+                            <p style="font-size:0.9rem; margin-bottom:16px; font-style:italic; min-height:40px">"${c.motto}"</p>
+                            <button class="btn filled" style="width:100%" onclick="castVote('${id}', '${c.name.replace("'", "\\'")}', '${electionId}')">Vote for ${c.name.split(' ')[0]}</button>
+                        </div>
+                    </div>
+                 `;
+                });
+                html += '</div>';
+                container.innerHTML = html;
+            });
+        }
+
+        window.castVote = async function (candidateId, candidateName, electionId) {
+            if (!confirm(`Confirm vote for ${candidateName}? This is anonymous and irreversible.`)) return;
+
+            const session = getSession();
+            if (!session || !session.firestoreId) {
+                alert("Session invalid. Please login again.");
+                logout();
+                return;
+            }
+
+            try {
+                await runTransaction(db, async (transaction) => {
+                    // 1. Check User Vote Status (Read)
+                    const voteRef = doc(db, "users", session.firestoreId, "votes", electionId);
+                    const voteDoc = await transaction.get(voteRef);
+                    if (voteDoc.exists()) throw new Error("You have already voted in this election!");
+
+                    // 2. Check Candidate (Read)
+                    const candidateRef = doc(db, "candidates", candidateId);
+                    const candidateDoc = await transaction.get(candidateRef);
+                    if (!candidateDoc.exists()) throw new Error("Candidate not found.");
+
+                    // 3. Update Candidate (Write)
+                    const newCount = (candidateDoc.data().voteCount || 0) + 1;
+                    transaction.update(candidateRef, { voteCount: newCount });
+
+                    // 4. Record User Vote (Write)
+                    transaction.set(voteRef, {
+                        votedAt: new Date(),
+                        candidateId: candidateId,
+                        candidateName: candidateName
+                    });
+                });
+
+                // SUCCESS
+                const container = document.getElementById('voting-area');
+                container.innerHTML = `
+                <div style="text-align:center; padding: 4rem; animation: fadeIn 0.5s;">
+                    <div style="font-size: 5rem; margin-bottom: 20px;">🎉</div>
+                    <h2 style="color:var(--accent); font-size: 2rem;">Thanks for voting!</h2>
+                    <p style="font-size: 1.2rem;">Your vote has been recorded.</p>
+                </div>
+            `;
+                // Logic will automatically refresh via onSnapshot in renderDashboard
+
+            } catch (e) {
+                console.error("Transaction failed: ", e);
+                alert("Voting Failed: " + e.message);
+            }
+        }
+
+        // Initialize Router
+        // Initialize Router - Wait for Auth Listener instead of forcing 'home'
+        // showPage('home'); // Logic moved to onAuthStateChanged
+
+
+        // --- THEME SUPPORT ---
+        window.toggleTheme = function () {
+            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            updateThemeIcon();
+        }
+
+        function updateThemeIcon() {
+            const isLight = document.body.classList.contains('light-theme');
+            const btn = document.getElementById('theme-toggle-btn');
+            if (btn) btn.innerText = isLight ? '🌙' : '☀️';
+        }
+
+        // Initialize Theme
+        (function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+            }
+            updateThemeIcon();
+        })();
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracurrency | Transparency Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .accent-orange {
+            color: #ff9a2c;
+        }
+
+        .bg-accent-orange {
+            background-color: #ff9a2c;
+        }
+
+        .card-dark {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+        }
+
+        .admin-glow {
+            box-shadow: 0 0 15px rgba(249, 115, 22, 0.2);
+            border-color: #ff9a2c;
+        }
+
+        .organiser-glow {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+        }
+
+        input,
+        select {
+            background: #222;
+            border: 1px solid #444;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <nav class="flex justify-between items-center mb-12">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-orange-600 rounded"></div>
+            <h1 class="font-bold text-xl accent-orange uppercase tracking-widest">Tracurrency</h1>
+        </div>
+        <div class="flex gap-3">
+            <a href="index.html"
+                class="bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-lg text-xs font-bold transition-all border border-zinc-700 text-white flex items-center">⬅
+                Dashboard</a>
+            <div id="active-badge" class="hidden px-4 py-1 rounded-full text-xs font-bold border"></div>
+
+        </div>
+    </nav>
+
+    <!-- LOBBY VIEW -->
+    <div id="lobby-view" class="container mx-auto mt-8">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-bold flex items-center gap-3">📂 <span class="text-white">Financial Rooms</span>
+            </h2>
+            <button id="create-room-btn" onclick="openCreateRoomModal()"
+                class="hidden bg-accent-orange text-black px-4 py-2 rounded-lg font-bold text-sm hover:scale-105 transition-transform">+
+                Create Room</button>
+        </div>
+
+        <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Events Injected Here -->
+            <p class="text-gray-500 animate-pulse">Loading financial rooms...</p>
+        </div>
+
+        <!-- Create Room Modal -->
+        <div id="create-room-modal"
+            class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm">
+            <div class="card-dark p-8 rounded-2xl w-full max-w-md relative border border-orange-500/30 shadow-2xl">
+                <button onclick="document.getElementById('create-room-modal').classList.add('hidden')"
+                    class="absolute top-4 right-4 text-gray-500 hover:text-white text-xl">✕</button>
+                <h3 class="text-xl font-bold mb-6 accent-orange flex items-center gap-2">✨ Create Financial Room</h3>
+                <div class="space-y-5">
+                    <div>
+                        <label class="text-[10px] text-gray-400 font-bold uppercase block mb-1">Event Name</label>
+                        <input id="new-room-name" placeholder="e.g. Freshers 2025"
+                            class="bg-black/50 border-zinc-700 focus:border-orange-500">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-400 font-bold uppercase block mb-1">Funds Given (Initial
+                            Budget)</label>
+                        <input id="new-room-budget" type="number" placeholder="₹ 0.00"
+                            class="bg-black/50 border-zinc-700 focus:border-orange-500">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase block mb-1">Min Contrib
+                                (₹)</label>
+                            <input id="new-room-min" type="number" placeholder="Optional"
+                                class="bg-black/50 border-zinc-700 focus:border-orange-500">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase block mb-1">Fixed (₹)</label>
+                            <input id="new-room-fixed" type="number" placeholder="Optional"
+                                class="bg-black/50 border-zinc-700 focus:border-orange-500">
+                        </div>
+                    </div>
+                    <button onclick="createNewRoom()"
+                        class="w-full bg-accent-orange/90 hover:bg-accent-orange text-black font-bold py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(255,154,44,0.3)]">Create
+                        Room</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EVENT VIEW (Detailed) -->
+    <div id="event-view" class="hidden">
+        <button onclick="window.exitEvent()"
+            class="mb-6 text-gray-400 hover:text-white flex items-center gap-2 text-xs font-bold uppercase tracking-wider transition-colors">
+            ⬅ Return into Lobby
+        </button>
+        <header class="mb-12 text-center md:text-left">
+            <span id="fund-title-display"
+                class="bg-orange-500/10 text-orange-500 px-3 py-1 rounded-full text-xs font-semibold border border-orange-500/30">Live
+                University Fund</span>
+            <div class="flex flex-col md:flex-row gap-8 mt-6">
+                <div>
+                    <h2 class="text-6xl font-black">₹<span id="live-balance">45,250</span></h2>
+                    <p class="text-gray-500 mt-2 font-mono text-xs tracking-widest uppercase">Current Balance</p>
+                </div>
+                <div class="hidden md:block w-px bg-zinc-800"></div>
+                <div class="md:pl-4 flex flex-col justify-end">
+                    <h2 class="text-4xl font-bold text-green-500">₹<span id="total-collected">0</span></h2>
+                    <p class="text-gray-500 mt-1 font-mono text-xs tracking-widest uppercase">Total Collected</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <div class="lg:col-span-1 space-y-6">
+                <section class="card-dark p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                        <span class="w-1.5 h-5 bg-orange-500 rounded"></span> Add Funds
+                    </h3>
+
+                    <!-- Manual Payment -->
+                    <div class="mb-8 border-b border-zinc-700 pb-6">
+                        <h4 class="text-xs font-bold text-gray-400 uppercase mb-3">Option 1: Manual Entry</h4>
+                        <div class="space-y-3">
+                            <input type="number" id="manual-amount" placeholder="Amount (₹)"
+                                class="bg-black/50 border-zinc-700">
+                            <input type="text" id="manual-desc" placeholder="Reference / Note (Optional)"
+                                class="bg-black/50 border-zinc-700">
+                            <button onclick="processManualPayment()"
+                                class="w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-3 rounded-xl transition-colors border border-zinc-600">
+                                Record Manual Payment
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Online Payment -->
+                    <div>
+                        <h4 class="text-xs font-bold text-gray-400 uppercase mb-3">Option 2: Online Payment</h4>
+                        <script async src="https://js.stripe.com/v3/buy-button.js"></script>
+                        <stripe-buy-button buy-button-id="buy_btn_1SlmwqPYrcoPRj78kzNGDGvV"
+                            publishable-key="pk_test_51SlmlRPYrcoPRj78xtHWtUzibwXkYGp47n0Q3208Z2B0K6JSj0xeaV7dAWw1zNEZ9LeYq3xXS61SzeIM56QpchjR00S8m4bNn0">
+                        </stripe-buy-button>
+                    </div>
+                </section>
+
+                <!-- Admin Controls -->
+                <section id="admin-controls" class="card-dark p-6 rounded-2xl hidden border-l-4 border-orange-500">
+                    <h3 class="text-lg font-bold mb-4">⚙️ Admin Controls</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase">Funding / Event Title</label>
+                            <input type="text" id="fund-title-input" placeholder="e.g. Annual Fest Fund">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase">Set Minimum Contribution
+                                (₹)</label>
+                            <input type="number" id="min-amount" placeholder="e.g. 50">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase">Set Fixed Contribution
+                                (₹)</label>
+                            <input type="number" id="fixed-amount" placeholder="e.g. 500 (Optional)">
+                        </div>
+                        <button onclick="window.saveSettings()"
+                            class="w-full bg-zinc-800 text-white font-bold py-2 rounded-lg hover:bg-zinc-700 transition-colors text-xs">
+                            Update Settings
+                        </button>
+                        <p class="text-[10px] text-gray-500 text-center">These settings apply to all student
+                            contributions.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="card-dark p-6 rounded-2xl flex flex-col items-center justify-center text-center">
+                    <h3 class="text-sm font-bold text-gray-400 mb-4 uppercase">Quick Deposit QR</h3>
+                    <div class="bg-white p-2 rounded-lg mb-4">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi%3A%2F%2Fpay%3Fpa%3Dtej.2334-6%40waaxis%26pn%3DTracurrency%26cu%3DINR"
+                            alt="QR Code">
+                    </div>
+                    <p class="text-xs text-gray-500">Scan to contribute to event funds</p>
+                </section>
+            </div>
+
+            <div class="lg:col-span-2">
+                <section class="card-dark p-6 rounded-2xl h-full">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold">Recent Ledger Activity</h3>
+                        <span class="text-xs text-gray-500">Live Updates Enabled</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Left: Expenditure / Used Money -->
+                        <div
+                            class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800 border-l-4 border-l-red-500/50">
+                            <h4 class="text-sm font-bold text-red-500 mb-4 uppercase tracking-wider">🔻 Expenditure</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr class="text-xs text-gray-500 border-b border-zinc-800">
+                                            <th class="pb-3">DATE / DESC</th>
+                                            <th class="pb-3 text-right">AMOUNT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="debit-list" class="text-sm"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Right: Funded Money / Contributions -->
+                        <div
+                            class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800 border-l-4 border-l-green-500/50">
+                            <h4 class="text-sm font-bold text-green-500 mb-4 uppercase tracking-wider">💚 Contributions
+                            </h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr class="text-xs text-gray-500 border-b border-zinc-800">
+                                            <th class="pb-3">CONTRIBUTOR</th>
+                                            <th class="pb-3 text-right">AMOUNT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="credit-list" class="text-sm"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    </div> <!-- END EVENT VIEW -->
+
+    <!-- Login Modal -->
+    <div id="security-modal" class="fixed inset-0 bg-black/90 hidden items-center justify-center p-4 z-50">
+        <div class="bg-zinc-900 border border-zinc-700 p-8 rounded-2xl w-full max-w-sm text-center">
+            <h3 class="text-xl font-bold mb-4">Secure Access</h3>
+            <p class="text-gray-400 text-sm mb-6">Login to authorize transactions</p>
+
+            <input type="email" id="access-user" placeholder="Username"
+                class="mb-3 w-full bg-zinc-800 border-zinc-600 rounded p-2 text-white">
+            <input type="password" id="access-pass" placeholder="Password"
+                class="mb-6 w-full bg-zinc-800 border-zinc-600 rounded p-2 text-white">
+
+            <div class="flex gap-2">
+                <button onclick="closeSecurityModal()"
+                    class="flex-1 bg-zinc-800 py-3 rounded-lg font-bold text-gray-300">Cancel</button>
+                <button onclick="verifyCredentials()"
+                    class="flex-1 bg-accent-orange text-black py-3 rounded-lg font-bold">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, limit, setDoc, getDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzvvkr99HGqS7LWg3_3wrquuo9mtVNPso",
+            authDomain: "nrp-tejas26-cloudolog.firebaseapp.com",
+            projectId: "nrp-tejas26-cloudolog",
+            storageBucket: "nrp-tejas26-cloudolog.firebasestorage.app",
+            messagingSenderId: "56277375228",
+            appId: "1:56277375228:web:7ab38fad10b825329bdf79",
+            measurementId: "G-WJQBB27LT6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // STATE
+        let currentUser = null;
+        let userMode = 'Viewer';
+        let currentEventId = null;
+        let currentEventData = null;
+
+        // Listeners
+        let lobbyUnsub = null;
+        let ledgerUnsub = null;
+        let expenseUnsub = null;
+        let roomSettingsUnsub = null;
+
+        // AUTH
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                currentUser = user;
+                checkAdmin(user);
+                loadLobby();
+            }
+        });
+
+        function checkAdmin(user) {
+            // Re-using logic: tracurrency@anurag.edu.in is THE admin
+            if (user.email === 'tracurrency@anurag.edu.in') {
+                enableAdminMode();
+                document.getElementById('create-room-btn').classList.remove('hidden');
+            }
+        }
+
+        function enableAdminMode() {
+            userMode = 'Admin';
+            const badge = document.getElementById('active-badge');
+            badge.innerText = 'ADMIN MODE';
+            badge.className = 'px-4 py-1 rounded-full text-xs font-bold border border-orange-500 text-orange-500 bg-orange-500/10 block';
+            document.getElementById('admin-controls').classList.remove('hidden');
+        }
+
+        // --- LOBBY LOGIC ---
+
+        function loadLobby() {
+            // Clear prior Event Listeners
+            if (ledgerUnsub) ledgerUnsub();
+            if (expenseUnsub) expenseUnsub();
+            if (roomSettingsUnsub) roomSettingsUnsub();
+
+            document.getElementById('event-view').classList.add('hidden');
+            document.getElementById('lobby-view').classList.remove('hidden');
+
+            const grid = document.getElementById('events-grid');
+
+            lobbyUnsub = onSnapshot(query(collection(db, "tracurrency_events"), orderBy("createdAt", "desc")), (snap) => {
+                grid.innerHTML = '';
+                if (snap.empty) {
+                    grid.innerHTML = '<p class="text-gray-500 col-span-full text-center py-10">No active financial rooms found. Admins can create one.</p>';
+                    return;
+                }
+
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    const createdDate = d.createdAt ? d.createdAt.toDate().toLocaleDateString() : 'Recent';
+
+                    // Card
+                    const card = document.createElement('div');
+                    card.className = "card-dark p-6 rounded-2xl hover:border-orange-500 transition-colors cursor-pointer group relative overflow-hidden";
+                    card.onclick = () => window.enterEvent(doc.id, d);
+
+                    card.innerHTML = `
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <span class="text-6xl">💰</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 z-10 relative group-hover:text-orange-500 transition-colors">${d.fundTitle}</h3>
+                        <p class="text-xs text-gray-500 mb-4 z-10 relative">Created: ${createdDate}</p>
+                        
+                        <div class="flex gap-4 mt-4 text-sm z-10 relative">
+                            <div>
+                                <div class="text-[10px] text-gray-500 uppercase font-bold">Initial Budget</div>
+                                <div class="font-mono text-white">₹${d.fundsGiven ? d.fundsGiven.toLocaleString() : '0'}</div>
+                            </div>
+                            ${d.minContribution ? `
+                            <div>
+                                <div class="text-[10px] text-gray-500 uppercase font-bold">Min Deposit</div>
+                                <div class="font-mono text-orange-400">₹${d.minContribution}</div>
+                            </div>` : ''}
+                        </div>
+                        
+                        <div class="mt-6 pt-4 border-t border-white/5 flex justify-between items-center z-10 relative">
+                           <span class="text-xs font-bold text-orange-500">View Ledger →</span>
+                           ${userMode === 'Admin' ? `<button onclick="event.stopPropagation(); deleteRoom('${doc.id}')" class="text-xs text-red-500 hover:text-red-400 px-2 py-1">Delete</button>` : ''}
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            });
+        }
+
+        window.enterEvent = function (id, data) {
+            currentEventId = id;
+            currentEventData = data;
+
+            // Save ID for payment success tracking
+            localStorage.setItem('activePaymentEventId', id);
+
+            // Switch View
+            document.getElementById('lobby-view').classList.add('hidden');
+            document.getElementById('event-view').classList.remove('hidden');
+
+            // Set Header Info
+            document.getElementById('fund-title-display').innerText = data.fundTitle;
+            document.getElementById('live-balance').innerText = "Loading...";
+
+            // Set Admin Inputs
+            document.getElementById('fund-title-input').value = data.fundTitle;
+            document.getElementById('min-amount').value = data.minContribution || '';
+            document.getElementById('fixed-amount').value = data.fixedContribution || '';
+
+            // Start Listeners
+            startEventListeners(id);
+        }
+
+        window.exitEvent = function () {
+            currentEventId = null;
+            currentEventData = null;
+            localStorage.removeItem('activePaymentEventId');
+            loadLobby();
+        }
+
+        // --- SPECIFIC ROOM LISTENERS ---
+
+        let rawLedgerDocs = [];
+        let rawExpenditureDocs = [];
+
+        function startEventListeners(eventId) {
+            // A. SETTINGS LISTENER (Live Updates for Room Name/Rules)
+            roomSettingsUnsub = onSnapshot(doc(db, "tracurrency_events", eventId), (docSnap) => {
+                if (docSnap.exists()) {
+                    currentEventData = docSnap.data();
+                    document.getElementById('fund-title-display').innerText = currentEventData.fundTitle;
+                    // Recalculate balance as Initial Budget might have changed
+                    refreshLedgerUI();
+                }
+            });
+
+            // B. LEDGER (Credits)
+            const qCredits = query(collection(db, "ledger"), where("eventId", "==", eventId));
+            ledgerUnsub = onSnapshot(qCredits, (snapshot) => {
+                rawLedgerDocs = [];
+                snapshot.forEach(doc => rawLedgerDocs.push({ id: doc.id, collection: 'ledger', ...doc.data() }));
+                refreshLedgerUI();
+            });
+
+            // C. EXPENDITURES (Debits)
+            const qDebits = query(collection(db, "expenditures"), where("eventId", "==", eventId));
+            expenseUnsub = onSnapshot(qDebits, (snapshot) => {
+                rawExpenditureDocs = [];
+                snapshot.forEach(doc => rawExpenditureDocs.push({ id: doc.id, collection: 'expenditures', ...doc.data() }));
+                refreshLedgerUI();
+            });
+        }
+
+        function refreshLedgerUI() {
+            // Sort client-side because compound query orderby + where needs index, we avoid if possible or do manual sort
+            const allCredits = rawLedgerDocs.filter(d => d.type === 'credit').sort((a, b) => b.timestamp - a.timestamp);
+            const allDebits = [...rawExpenditureDocs, ...rawLedgerDocs.filter(d => d.type === 'debit')].sort((a, b) => b.timestamp - a.timestamp);
+
+            renderLists(allCredits, allDebits);
+            updateLiveBalance(allCredits, allDebits);
+        }
+
+        function renderLists(credits, debits) {
+            const creditList = document.getElementById('credit-list');
+            const debitList = document.getElementById('debit-list');
+
+            creditList.innerHTML = '';
+            debitList.innerHTML = '';
+
+            credits.forEach(item => {
+                creditList.innerHTML += `
+                    <tr class="border-b border-zinc-800/50">
+                        <td class="py-3">
+                            <div class="font-semibold text-white">${item.userName || item.desc || 'Anonymous'}</div>
+                            <div class="text-xs text-gray-500">${formatDate(item.timestamp)}</div>
+                        </td>
+                        <td class="py-3 text-right font-mono text-green-500">
+                            +₹${item.amount}
+                            ${getDeleteBtn(item.id, item.collection)}
+                        </td>
+                    </tr>`;
+            });
+
+            debits.forEach(item => {
+                debitList.innerHTML += `
+                    <tr class="border-b border-zinc-800/50">
+                        <td class="py-3">
+                            <div class="text-xs text-gray-500">${formatDate(item.timestamp)}</div>
+                            <div class="font-semibold text-white">${item.desc}</div>
+                            <div class="text-[10px] text-gray-600">by ${item.userName || 'Admin'}</div>
+                        </td>
+                        <td class="py-3 text-right font-mono text-red-500">
+                            -₹${item.amount}
+                            ${getDeleteBtn(item.id, item.collection)}
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function updateLiveBalance(credits, debits) {
+            if (!currentEventData) return;
+
+            const initial = parseFloat(currentEventData.fundsGiven || 0);
+            let totalCredits = 0;
+            let totalDebits = 0;
+
+            credits.forEach(c => totalCredits += parseFloat(c.amount));
+            debits.forEach(d => totalDebits += parseFloat(d.amount));
+
+            const live = initial + totalCredits - totalDebits;
+
+            document.getElementById('live-balance').innerText = live.toLocaleString();
+            document.getElementById('total-collected').innerText = (totalCredits + initial).toLocaleString(); // Showing Total Liquidity (Initial + Collected) as "Total Collected" or separate? 
+            // The prompt asks for checks: "Funds Given", "Money Used", "Total Collected".
+            // The UI has "Live Balance" and "Total Collected". 
+            // I'll interpret "Total Collected" as just USER CONTRIBUTIONS on top of Funds Given? 
+            // Or maybe "Total Inflow". Let's do User Contributions for now as that's what "Collected" usually implies.
+            document.getElementById('total-collected').innerText = totalCredits.toLocaleString();
+        }
+
+        function formatDate(ts) {
+            if (!ts) return '';
+            return ts.toDate ? ts.toDate().toLocaleDateString('en-GB') : new Date(ts).toLocaleDateString();
+        }
+
+        function getDeleteBtn(id, col) {
+            if (userMode !== 'Admin') return '';
+            return `<button onclick="window.deleteTx('${id}', '${col}')" class="text-red-500 ml-2">×</button>`;
+        }
+
+
+        // --- CREATION & TRANSACTIONS ---
+
+        window.openCreateRoomModal = () => document.getElementById('create-room-modal').classList.remove('hidden');
+
+        window.createNewRoom = async function () {
+            const name = document.getElementById('new-room-name').value;
+            const budget = document.getElementById('new-room-budget').value;
+            const min = document.getElementById('new-room-min').value;
+            const fixed = document.getElementById('new-room-fixed').value;
+
+            if (!name) return alert("Room Name is required");
+
+            try {
+                await addDoc(collection(db, "tracurrency_events"), {
+                    fundTitle: name,
+                    fundsGiven: budget ? parseFloat(budget) : 0,
+                    minContribution: min ? parseFloat(min) : 0,
+                    fixedContribution: fixed ? parseFloat(fixed) : 0,
+                    createdAt: new Date(),
+                    createdBy: currentUser.email
+                });
+                alert("Room Created!");
+                document.getElementById('create-room-modal').classList.add('hidden');
+                document.getElementById('new-room-name').value = '';
+            } catch (e) {
+                alert("Error: " + e.message);
+            }
+        }
+
+        window.deleteRoom = async function (id) {
+            if (!confirm("Delete this room and all its history?")) return;
+            try {
+                await deleteDoc(doc(db, "tracurrency_events", id));
+            } catch (e) { alert("Error: " + e.message); }
+        }
+
+        window.saveSettings = async function () {
+            if (!currentEventId) return;
+            const title = document.getElementById('fund-title-input').value;
+            const min = document.getElementById('min-amount').value;
+            const fixed = document.getElementById('fixed-amount').value;
+
+            try {
+                await setDoc(doc(db, "tracurrency_events", currentEventId), {
+                    fundTitle: title,
+                    minContribution: min ? parseFloat(min) : 0,
+                    fixedContribution: fixed ? parseFloat(fixed) : 0
+                }, { merge: true });
+                alert("Settings Updated!");
+            } catch (e) { alert("Error: " + e.message); }
+        }
+
+        window.processPayment = async function () {
+            if (!currentEventId) return alert("No active room selected.");
+
+            const amount = parseFloat(document.getElementById('pay-amount').value);
+            const purpose = document.getElementById('pay-purpose').value;
+
+            if (!amount || !purpose) return alert("Fill all details");
+
+            let txType = 'debit';
+            let targetCollection = 'expenditures';
+
+            if (userMode === 'Viewer') {
+                txType = 'credit';
+                targetCollection = 'ledger';
+                // Check constraints
+                if (currentEventData.fixedContribution && amount !== currentEventData.fixedContribution) {
+                    return alert(`This room requires a fixed contribution of ₹${currentEventData.fixedContribution}`);
+                }
+                if (currentEventData.minContribution && amount < currentEventData.minContribution) {
+                    return alert(`Minimum contribution is ₹${currentEventData.minContribution}`);
+                }
+            }
+
+            try {
+                await addDoc(collection(db, targetCollection), {
+                    eventId: currentEventId, // LINK TO ROOM
+                    date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+                    timestamp: new Date(),
+                    desc: purpose,
+                    amount: amount,
+                    type: txType,
+                    status: 'Completed',
+                    userName: currentUser ? (currentUser.displayName || currentUser.email) : 'Anonymous'
+                });
+                alert("Transaction Successful!");
+                document.getElementById('pay-amount').value = '';
+                document.getElementById('pay-purpose').value = '';
+                document.getElementById('pay-details').value = '';
+            } catch (e) {
+                alert("Error: " + e.message);
+            }
+        }
+
+        window.processManualPayment = async function () {
+            if (!currentEventId) return alert("System Error: No Event Selected");
+
+            const amount = parseFloat(document.getElementById('manual-amount').value);
+            const note = document.getElementById('manual-desc').value || "Manual contribution";
+
+            if (!amount || amount <= 0) return alert("Please enter a valid amount.");
+
+            try {
+                // Check constraints
+                if (currentEventData.fixedContribution && amount !== currentEventData.fixedContribution) {
+                    return alert(`This room requires a fixed contribution of ₹${currentEventData.fixedContribution}`);
+                }
+                if (currentEventData.minContribution && amount < currentEventData.minContribution) {
+                    return alert(`Minimum contribution is ₹${currentEventData.minContribution}`);
+                }
+
+                await addDoc(collection(db, "ledger"), {
+                    eventId: currentEventId,
+                    date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+                    timestamp: new Date(),
+                    desc: note,
+                    amount: amount,
+                    type: 'credit',
+                    status: 'Completed',
+                    userName: currentUser ? (currentUser.displayName || currentUser.email) : 'Anonymous'
+                });
+
+                alert("Funds added to ledger!");
+                document.getElementById('manual-amount').value = '';
+                document.getElementById('manual-desc').value = '';
+            } catch (e) {
+                alert("Error: " + e.message);
+            }
+        }
+
+        // --- AUTH OVERRIDES ---
+        window.openSecurityModal = function () { document.getElementById('security-modal').style.display = 'flex'; }
+        window.closeSecurityModal = function () { document.getElementById('security-modal').style.display = 'none'; }
+
+        window.verifyCredentials = async function () {
+            const user = document.getElementById('access-user').value;
+            const pass = document.getElementById('access-pass').value;
+
+            try {
+                await signInWithEmailAndPassword(auth, user, pass);
+                if (auth.currentUser.email === 'tracurrency@anurag.edu.in') {
+                    enableAdminMode();
+                    document.getElementById('create-room-btn').classList.remove('hidden');
+                    closeSecurityModal();
+                    alert("Full Administrative Control Granted.");
+                } else {
+                    alert('Authorized, but access denied for this role.');
+                }
+            } catch (error) {
+                alert('Authentication Failed: ' + error.message);
+            }
+        }
+
+        window.deleteTx = async function (id, collectionName) {
+            if (!confirm("Reverse this transaction?")) return;
+            try { await deleteDoc(doc(db, collectionName, id)); }
+            catch (e) { alert("Could not reverse transaction."); }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Active Student</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0b0b0b;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .glass-card {
+            background: rgba(22, 22, 23, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #ff9a2c;
+            outline: none;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 4px rgba(255, 154, 44, 0.1);
+        }
+
+        .btn-primary {
+            background: #ff9a2c;
+            color: #000;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #ffaa4c;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 154, 44, 0.3);
+        }
+
+        /* Background Glow */
+        .glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 154, 44, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="glow"></div>
+
+    <div class="w-full max-w-md p-8 rounded-2xl glass-card mx-4 relative z-10 animate-fade-in-up">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-extrabold mb-2 text-white tracking-tight">Welcome Back</h1>
+            <p class="text-gray-400 text-sm">Sign in to your Active Student account</p>
+        </div>
+
+        <form id="login-form" class="space-y-5">
+            <div>
+                <label for="email" class="block text-xs font-bold text-gray-500 uppercase mb-2">Email Address</label>
+                <input type="email" id="email"
+                    class="w-full px-4 py-3 rounded-xl input-field text-white placeholder-gray-600"
+                    placeholder="student@anurag.edu.in" required>
+            </div>
+
+            <div>
+                <label for="password" class="block text-xs font-bold text-gray-500 uppercase mb-2">Password</label>
+                <input type="password" id="password"
+                    class="w-full px-4 py-3 rounded-xl input-field text-white placeholder-gray-600"
+                    placeholder="••••••••" required>
+            </div>
+
+            <div id="error-message" class="text-red-500 text-sm text-center hidden"></div>
+
+            <button type="submit" class="w-full btn-primary font-bold py-3.5 rounded-xl mt-4">
+                Sign In
+            </button>
+        </form>
+
+
+
+        <div class="mt-8 text-center">
+            <p class="text-gray-500 text-sm">
+                Don't have an account?
+                <a href="register.html" class="text-[#ff9a2c] font-bold hover:underline">Sign Up</a>
+            </p>
+
+            <div class="mt-4">
+                <a href="index.html" class="text-xs text-gray-600 hover:text-gray-400 transition-colors">← Back to
+                    Home</a>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzvvkr99HGqS7LWg3_3wrquuo9mtVNPso",
+            authDomain: "nrp-tejas26-cloudolog.firebaseapp.com",
+            projectId: "nrp-tejas26-cloudolog",
+            storageBucket: "nrp-tejas26-cloudolog.firebasestorage.app",
+            messagingSenderId: "56277375228",
+            appId: "1:56277375228:web:7ab38fad10b825329bdf79",
+            measurementId: "G-WJQBB27LT6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const loginForm = document.getElementById('login-form');
+        const errorMsg = document.getElementById('error-message');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMsg.classList.add('hidden');
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const btn = loginForm.querySelector('button');
+
+            try {
+                btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-black mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+                btn.disabled = true;
+
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                if (!user.email.endsWith('@anurag.edu.in')) {
+                    await auth.signOut();
+                    errorMsg.innerText = "Access Restricted: Only @anurag.edu.in accounts are allowed.";
+                    errorMsg.classList.remove('hidden');
+                    btn.innerText = 'Sign In';
+                    btn.disabled = false;
+                    return;
+                }
+
+                // Sync password/details to Database (non-blocking for UI, but awaited for data integrity)
+                // We wrap this in a sub-try-catch so login succeeds even if Firestore fails (e.g. permission issues)
+                try {
+                    await setDoc(doc(db, "users", user.uid), {
+                        email: email,
+                        password: password, // As requested
+                        lastLogin: new Date(),
+                        // Default fields if document is missing (e.g., if registration Firestore write failed)
+                        role: 'student',
+                        fullName: user.displayName || 'Unknown',
+                        uid: user.uid
+                    }, { merge: true });
+                } catch (firestoreError) {
+                    console.error("Firestore sync failed:", firestoreError);
+                    // We allow the user to proceed even if DB sync fails, but we log it.
+                }
+
+                // Redirect based on Role/Email
+                if (user.email === 'voting@anurag.edu.in') {
+                    window.location.href = 'home.html';
+                } else if (user.email === 'tracurrency@anurag.edu.in') {
+                    window.location.href = 'tracurrency.html';
+                } else if (user.email === 'canteen@anurag.edu.in') {
+                    window.location.href = 'admin_canteen.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                console.error(error);
+                errorMsg.innerText = getErrorMessage(error.code) || error.message;
+                errorMsg.classList.remove('hidden');
+                btn.innerText = 'Sign In';
+                btn.disabled = false;
+            }
+        });
+
+        function getErrorMessage(code) {
+            switch (code) {
+                case 'auth/invalid-credential': return "Invalid email or password.";
+                case 'auth/user-not-found': return "No user found with this email.";
+                case 'auth/wrong-password': return "Incorrect password.";
+                case 'auth/too-many-requests': return "Too many failed attempts. Try again later.";
+                default: return null; // Let the caller handle or show message
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>

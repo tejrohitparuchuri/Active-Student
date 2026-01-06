@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success | Tracurrency</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #ffffff;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="text-center">
+        <div class="text-6xl mb-4">✅</div>
+        <h1 class="text-2xl font-bold text-green-500 mb-2">Payment Successful!</h1>
+        <p class="text-gray-400 mb-4">Verifying and adding to ledger...</p>
+        <div id="status" class="text-sm font-mono text-gray-500">Processing...</div>
+    </div>
+
+    <div id="selection-ui" class="hidden mt-6 w-full max-w-md">
+        <p class="text-sm text-gray-400 mb-2">Could not detect active room. Please select where to add funds:</p>
+        <div id="event-buttons" class="flex flex-col gap-2"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzvvkr99HGqS7LWg3_3wrquuo9mtVNPso",
+            authDomain: "nrp-tejas26-cloudolog.firebaseapp.com",
+            projectId: "nrp-tejas26-cloudolog",
+            storageBucket: "nrp-tejas26-cloudolog.firebasestorage.app",
+            messagingSenderId: "56277375228",
+            appId: "1:56277375228:web:7ab38fad10b825329bdf79",
+            measurementId: "G-WJQBB27LT6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        async function init() {
+            const eventId = localStorage.getItem('activePaymentEventId');
+
+            if (eventId) {
+                // Scenario 1: We know the event (User came from App)
+                await processTransaction(eventId);
+            } else {
+                // Scenario 2: Direct Link / Lost Context -> Let user choose
+                document.getElementById('status').innerText = "Select an event below:";
+                await loadEventsFallback();
+            }
+        }
+
+        async function loadEventsFallback() {
+            const ui = document.getElementById('selection-ui');
+            const list = document.getElementById('event-buttons');
+            ui.classList.remove('hidden');
+
+            try {
+                const q = query(collection(db, "tracurrency_events"), orderBy("createdAt", "desc"));
+                const snap = await getDocs(q);
+
+                if (snap.empty) {
+                    list.innerHTML = "<p class='text-red-500'>No events found.</p>";
+                    return;
+                }
+
+                snap.forEach(doc => {
+                    const btn = document.createElement('button');
+                    btn.className = "bg-zinc-800 hover:bg-zinc-700 text-white py-3 px-4 rounded-lg font-bold border border-zinc-700 transition-colors";
+                    btn.innerText = doc.data().fundTitle || "Untitled Event";
+                    btn.onclick = () => processTransaction(doc.id);
+                    list.appendChild(btn);
+                });
+            } catch (e) {
+                console.error(e);
+                list.innerText = "Error loading events.";
+            }
+        }
+
+        async function processTransaction(eventId) {
+            const statusEl = document.getElementById('status');
+            document.getElementById('selection-ui').classList.add('hidden'); // Hide fallback if open
+            statusEl.innerText = "Processing Transaction...";
+            statusEl.className = "text-yellow-500 font-mono animate-pulse";
+
+            try {
+                await addDoc(collection(db, "ledger"), {
+                    eventId: eventId,
+                    date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+                    timestamp: new Date(),
+                    desc: "Stripe Online Payment",
+                    amount: 0, // Placeholder as discussed
+                    type: 'credit',
+                    status: 'Completed',
+                    userName: auth.currentUser ? (auth.currentUser.displayName || auth.currentUser.email) : 'Online Contributor'
+                });
+
+                statusEl.innerText = "Success! Redirecting...";
+                statusEl.className = "text-green-500 font-mono font-bold";
+
+                // Cleanup
+                localStorage.removeItem('activePaymentEventId');
+
+                setTimeout(() => {
+                    window.location.href = 'tracurrency.html';
+                }, 1500);
+
+            } catch (error) {
+                console.error(error);
+                statusEl.innerText = "Error: " + error.message;
+                statusEl.className = "text-red-500 font-mono";
+            }
+        }
+
+        // Start
+        setTimeout(init, 1000); // Small delay to allow Auth to load if available
+
+    </script>
+</body>
+
+</html>

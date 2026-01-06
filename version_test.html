@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Database Connection Test</title>
+    <style>
+        body {
+            background: #0b0b0b;
+            color: #fff;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .status {
+            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        .success {
+            color: #4caf50;
+        }
+
+        .error {
+            color: #f44336;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="status">
+        <h2>🔥 Firebase Connection Test</h2>
+        <p id="msg">Connecting...</p>
+        <div id="details" style="margin-top:10px; font-family:monospace; font-size:0.8rem; color:#888;"></div>
+        <button id="listUsersBtn"
+            style="margin-top: 20px; padding: 10px 20px; cursor: pointer; background: #333; color: white; border: none; border-radius: 5px;">
+            List All Users (Debug)
+        </button>
+        <pre id="userList"
+            style="text-align: left; background: #222; padding: 10px; margin-top: 10px; width: 100%; max-width: 600px; overflow: auto; max-height: 300px; display: none;"></pre>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzvvkr99HGqS7LWg3_3wrquuo9mtVNPso",
+            authDomain: "nrp-tejas26-cloudolog.firebaseapp.com",
+            projectId: "nrp-tejas26-cloudolog",
+            storageBucket: "nrp-tejas26-cloudolog.firebasestorage.app",
+            messagingSenderId: "56277375228",
+            appId: "1:56277375228:web:7ab38fad10b825329bdf79",
+            measurementId: "G-WJQBB27LT6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const msgEl = document.getElementById('msg');
+        const detailsEl = document.getElementById('details');
+        const listUsersBtn = document.getElementById('listUsersBtn');
+        const userListEl = document.getElementById('userList');
+
+        async function testConnection() {
+            try {
+                const testId = "ping_" + Date.now();
+                msgEl.innerText = "Attempting to write to Firestore...";
+
+                // Write
+                await setDoc(doc(db, "_test_connection", "latest"), {
+                    timestamp: new Date(),
+                    testId: testId,
+                    message: "Database is connected!"
+                });
+
+                msgEl.innerHTML = "<span class='success'>✅ WRITE SUCCESSFUL</span>";
+
+                // Read
+                msgEl.innerHTML += "<br>Attempting to read...";
+                const docSnap = await getDoc(doc(db, "_test_connection", "latest"));
+
+                if (docSnap.exists()) {
+                    msgEl.innerHTML = "<span class='success'>✅ CONNECTION VERIFIED (Write & Read)</span>";
+                    detailsEl.innerText = "Wrote & Read ID: " + docSnap.data().testId;
+                } else {
+                    throw new Error("Write succeeded but Read failed (Document not found).");
+                }
+
+            } catch (error) {
+                console.error(error);
+                msgEl.innerHTML = `<span class='error'>❌ CONNECTION FAILED</span>`;
+                detailsEl.innerText = error.message;
+            }
+        }
+
+        listUsersBtn.addEventListener('click', async () => {
+            userListEl.style.display = 'block';
+            userListEl.innerText = "Fetching users...";
+            try {
+                const querySnapshot = await getDocs(collection(db, "users"));
+                if (querySnapshot.empty) {
+                    userListEl.innerText = "No users found in 'users' collection.";
+                } else {
+                    let output = `Found ${querySnapshot.size} users:\n\n`;
+                    querySnapshot.forEach((doc) => {
+                        const d = doc.data();
+                        output += `[${doc.id}]\nName: ${d.fullName}\nEmail: ${d.email}\nRole: ${d.role}\n---\n`;
+                    });
+                    userListEl.innerText = output;
+                }
+            } catch (err) {
+                userListEl.innerText = "Error fetching users: " + err.message;
+            }
+        });
+
+        testConnection();
+    </script>
+</body>
+
+</html>

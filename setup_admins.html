@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Initialize Admins & Users Collection</title>
+    <style>
+        body {
+            background: #0b0b0b;
+            color: #fff;
+            font-family: monospace;
+            padding: 2rem;
+        }
+
+        .log {
+            margin-bottom: 0.5rem;
+        }
+
+        .success {
+            color: #4caf50;
+        }
+
+        .error {
+            color: #f44336;
+        }
+
+        .info {
+            color: #2196f3;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Initializing 'users' collection...</h1>
+    <div id="logs"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzvvkr99HGqS7LWg3_3wrquuo9mtVNPso",
+            authDomain: "nrp-tejas26-cloudolog.firebaseapp.com",
+            projectId: "nrp-tejas26-cloudolog",
+            storageBucket: "nrp-tejas26-cloudolog.firebasestorage.app",
+            messagingSenderId: "56277375228",
+            appId: "1:56277375228:web:7ab38fad10b825329bdf79",
+            measurementId: "G-WJQBB27LT6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const logDiv = document.getElementById('logs');
+        function log(msg, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.innerText = `> ${msg}`;
+            logDiv.appendChild(div);
+        }
+
+        const admins = [
+            { email: 'voting@anurag.edu.in', pass: 'nrp#26265', name: 'Voting Admin', role: 'admin' },
+            { email: 'canteen@anurag.edu.in', pass: 'canteen#123', name: 'Canteen Admin', role: 'admin' },
+            { email: 'tracurrency@anurag.edu.in', pass: 'tracurrency#123', name: 'Tracurrency Admin', role: 'admin' }
+        ];
+
+        async function init() {
+            log("Starting Admin Initialization...");
+
+            for (const admin of admins) {
+                try {
+                    log(`Processing ${admin.email}...`);
+
+                    let userCredential;
+                    try {
+                        // Try creating user
+                        userCredential = await createUserWithEmailAndPassword(auth, admin.email, admin.pass);
+                        log(`  Created Auth User: ${admin.email}`, 'success');
+                    } catch (e) {
+                        if (e.code === 'auth/email-already-in-use') {
+                            log(`  User exists, signing in to update Firestore...`, 'info');
+                            userCredential = await signInWithEmailAndPassword(auth, admin.email, admin.pass);
+                        } else {
+                            throw e;
+                        }
+                    }
+
+                    const user = userCredential.user;
+
+                    // Create/Update Firestore Document in 'users' collection
+                    await setDoc(doc(db, "users", user.uid), {
+                        fullName: admin.name,
+                        email: admin.email,
+                        role: admin.role,
+                        createdAt: new Date(),
+                        uid: user.uid,
+                        rollNo: 'ADMIN',
+                        collegeId: 'ADMIN'
+                    }, { merge: true });
+
+                    log(`  Firestore 'users' collection updated for ${admin.email}`, 'success');
+
+                } catch (err) {
+                    log(`  Error processing ${admin.email}: ${err.message}`, 'error');
+                }
+            }
+            log("Initialization Complete. You can close this page.", 'success');
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anurag University E-Canteen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .accent-orange {
+            color: #ff9a2c;
+        }
+
+        .bg-accent-orange {
+            background-color: #ff9a2c;
+        }
+
+        .card-dark {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            transition: transform 0.2s;
+        }
+
+        .card-dark:hover {
+            transform: translateY(-5px);
+            border-color: #ff9a2c;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #receipt-modal,
+            #receipt-modal * {
+                visibility: visible;
+            }
+
+            #receipt-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: white;
+                padding: 0;
+                display: flex !important;
+                align-items: flex-start;
+                justify-content: center;
+                z-index: 9999;
+            }
+
+            #receipt-content {
+                box-shadow: none;
+                width: 300px;
+                margin-top: 20px;
+                border: 1px solid #ccc;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <nav class="flex justify-between items-center mb-8 px-0 md:px-0">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-gray-600 rounded hidden xs:block"></div>
+            <h1 class="font-bold text-lg md:text-xl accent-orange whitespace-nowrap"><span
+                    class="hidden sm:inline">Anurag </span>Canteen</h1>
+        </div>
+        <div class="flex items-center gap-2 md:gap-4">
+            <a href="index.html"
+                class="bg-zinc-800 hover:bg-zinc-700 px-3 py-2 rounded-lg text-xs font-bold transition-all border border-zinc-700 text-white flex items-center">
+                ⬅ <span class="hidden sm:inline ml-1">Dashboard</span>
+            </a>
+            <button onclick="window.showOrders()"
+                class="bg-zinc-800 hover:bg-zinc-700 px-3 py-2 rounded-lg text-xs font-bold transition-all border border-zinc-700 text-white flex items-center gap-1">
+                <span>📦</span><span class="hidden sm:inline">Orders</span>
+            </button>
+
+            <span id="user-display" class="hidden md:inline text-sm text-gray-400">Hello, Student</span>
+            <div onclick="showBill()"
+                class="bg-orange-500/20 p-2 rounded-full cursor-pointer hover:bg-orange-500/30 transition-colors">
+                <span id="cart-count" class="font-bold accent-orange text-xs md:text-sm">Cart (0)</span>
+            </div>
+        </div>
+    </nav>
+
+    <header class="mb-16">
+        <span
+            class="bg-orange-500/10 text-orange-500 px-3 py-1 rounded-full text-xs font-semibold border border-orange-500/30">University
+            Dining</span>
+        <h2 class="text-5xl font-extrabold mt-4 leading-tight">Your Hunger <span class="accent-orange">Our
+                Priority</span><br></h2>
+        <p class="text-gray-400 mt-4 max-w-xl">Freshly prepared Indian delicacies Skip the queue and order online.</p>
+    </header>
+
+    <section>
+        <h3 class="text-2xl font-bold mb-8 flex items-center gap-2">
+            <span class="w-2 h-8 bg-accent-orange rounded"></span> Today's Special Menu
+        </h3>
+        <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Items will be injected here via JavaScript -->
+        </div>
+    </section>
+
+    <div id="bill-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-700 p-8 rounded-2xl w-full max-w-md">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold accent-orange">Order Summary</h3>
+                <button onclick="window.hideBill()"
+                    class="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+            </div>
+            <div id="bill-items" class="space-y-2 mb-6 text-gray-300">
+            </div>
+            <div class="border-t border-zinc-700 pt-4">
+                <div class="flex justify-between text-xl font-bold mb-6">
+                    <span>Total Amount:</span>
+                    <span id="bill-total" class="accent-orange">₹0</span>
+                </div>
+                <button onclick="closeBill()"
+                    class="w-full bg-accent-orange text-black py-3 rounded-lg font-bold hover:bg-orange-400">Pay &
+                    Close</button>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="showBill()"
+        class="fixed bottom-8 right-8 bg-accent-orange text-black px-8 py-4 rounded-full font-bold shadow-2xl hover:scale-105 transition-transform">
+        View Bill / Checkout
+    </button>
+
+    <div id="orders-modal" class="fixed inset-0 bg-black/90 hidden items-center justify-center p-4 z-50">
+        <div class="bg-zinc-900 border border-zinc-700 p-6 rounded-2xl w-full max-w-2xl h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-white">📦 Your Orders</h3>
+                <button onclick="window.hideOrders()"
+                    class="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+            </div>
+            <div id="orders-list" class="flex-1 overflow-y-auto space-y-4 pr-2">
+                <!-- Orders injected here -->
+                <div class="text-gray-500 text-center mt-10">Loading orders...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CLAIM NOTIFICATION MODAL -->
+    <div id="claim-modal" class="fixed inset-0 bg-black/95 hidden items-center justify-center p-4 z-[70]">
+        <div
+            class="bg-zinc-900 border-2 border-green-500 p-8 rounded-2xl w-full max-w-sm text-center shadow-[0_0_50px_rgba(34,197,94,0.3)]">
+            <div
+                class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6 text-5xl animate-bounce">
+                ✅
+            </div>
+            <h2 class="text-3xl font-extrabold text-white mb-2">Order Claimed!</h2>
+            <p class="text-gray-400 mb-6">Enjoy your meal!</p>
+
+            <div class="bg-black/50 p-4 rounded-xl mb-6">
+                <div class="text-xs text-gray-500 uppercase tracking-widest mb-1">Order ID</div>
+                <div id="claim-id" class="text-2xl font-mono font-bold text-green-400">...</div>
+            </div>
+
+            <button onclick="closeClaimModal()"
+                class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-xl transition-colors">Awesome,
+                Thanks!</button>
+        </div>
+    </div>
+
+    <!-- RECEIPT MODAL -->
+    <div id="receipt-modal" class="fixed inset-0 bg-black/95 hidden items-center justify-center p-4 z-[60]">
+        <div id="receipt-content"
+            class="bg-white text-black p-6 rounded-none w-full max-w-sm relative shadow-2xl font-mono text-sm transform transition-all">
+            <!-- Cutout effect top/bottom -->
+            <div class="absolute -top-2 left-0 w-full h-4 bg-black/95"
+                style="clip-path: polygon(0 50%, 5% 0, 10% 50%, 15% 0, 20% 50%, 25% 0, 30% 50%, 35% 0, 40% 50%, 45% 0, 50% 50%, 55% 0, 60% 50%, 65% 0, 70% 50%, 75% 0, 80% 50%, 85% 0, 90% 50%, 95% 0, 100% 50%, 100% 100%, 0 100%);">
+            </div>
+            <div class="absolute -bottom-2 left-0 w-full h-4 bg-black/95"
+                style="transform: rotate(180deg); clip-path: polygon(0 50%, 5% 0, 10% 50%, 15% 0, 20% 50%, 25% 0, 30% 50%, 35% 0, 40% 50%, 45% 0, 50% 50%, 55% 0, 60% 50%, 65% 0, 70% 50%, 75% 0, 80% 50%, 85% 0, 90% 50%, 95% 0, 100% 50%, 100% 100%, 0 100%);">
+            </div>
+
+            <div class="text-center mb-4 mt-2">
+                <h2 class="font-bold text-xl uppercase tracking-widest border-b-2 border-dashed border-black pb-2">
+                    Anurag Canteen</h2>
+                <div class="my-2 text-xs text-gray-600" id="receipt-time"></div>
+                <h1 class="text-2xl font-black my-2 break-words" id="receipt-id">ORD-0000</h1>
+            </div>
+
+            <div class="border-b border-dashed border-gray-400 mb-4"></div>
+
+            <div id="receipt-items" class="space-y-2 mb-4 max-h-40 overflow-auto">
+                <!-- Items -->
+            </div>
+
+            <div class="border-b border-dashed border-gray-400 mb-4"></div>
+
+            <div class="flex justify-between font-bold text-lg mb-6">
+                <span>TOTAL PAID</span>
+                <span id="receipt-total">₹0.00</span>
+            </div>
+
+            <div class="text-center mb-6">
+                <img id="receipt-barcode" class="h-16 w-full object-contain mix-blend-multiply" alt="Barcode">
+            </div>
+
+            <div class="flex flex-col gap-2 no-print">
+                <button onclick="window.print()"
+                    class="bg-black text-white w-full py-3 font-bold hover:bg-gray-800 uppercase tracking-wider">Print
+                    Receipt 🖨️</button>
+                <button onclick="closeReceipt()" class="text-center text-xs text-gray-400 hover:text-black py-2">Close &
+                    Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, doc, runTransaction, setDoc, getDoc, addDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // ... (Config remains same)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzvvkr99HGqS7LWg3_3wrquuo9mtVNPso",
+            authDomain: "nrp-tejas26-cloudolog.firebaseapp.com",
+            projectId: "nrp-tejas26-cloudolog",
+            storageBucket: "nrp-tejas26-cloudolog.firebasestorage.app",
+            messagingSenderId: "56277375228",
+            appId: "1:56277375228:web:7ab38fad10b825329bdf79",
+            measurementId: "G-WJQBB27LT6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let currentUser = null;
+        let menuItems = [];
+        let cart = [];
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                if (user.email === 'canteen@anurag.edu.in') {
+                    window.location.href = 'admin_canteen.html';
+                    return;
+                }
+                currentUser = user;
+                if (user.displayName) {
+                    document.getElementById('user-display').innerText = `Hello, ${user.displayName}`;
+                }
+                loadCart(); // Sync Cart on Load
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // --- Cart Sync Logic ---
+        async function loadCart() {
+            if (!currentUser) return;
+            try {
+                const docSnap = await getDoc(doc(db, "carts", currentUser.uid));
+                if (docSnap.exists()) {
+                    cart = docSnap.data().items || [];
+                    updateCartCount();
+                }
+            } catch (e) {
+                console.error("Error loading cart:", e);
+            }
+        }
+
+        async function saveCart() {
+            if (!currentUser) return;
+            try {
+                await setDoc(doc(db, "carts", currentUser.uid), {
+                    items: cart,
+                    updatedAt: new Date()
+                });
+            } catch (e) {
+                console.error("Error saving cart:", e);
+            }
+        }
+
+        // Real-time listener
+        onSnapshot(collection(db, "canteen_menu"), (snapshot) => {
+            menuItems = [];
+            snapshot.forEach((doc) => {
+                menuItems.push({ id: doc.id, ...doc.data() });
+            });
+            renderMenu();
+        });
+
+        function renderMenu() {
+            const grid = document.getElementById('menu-grid');
+            grid.innerHTML = '';
+
+            menuItems.forEach(item => {
+                const stock = item.stock !== undefined ? item.stock : 20; // Default 20 if missing
+                const isOutOfStock = stock <= 0;
+
+                grid.innerHTML += `
+                    <div class="card-dark p-4 rounded-xl relative overflow-hidden ${isOutOfStock ? 'opacity-75 grayscale' : ''}">
+                        ${isOutOfStock ? '<div class="absolute inset-0 bg-black/50 flex items-center justify-center z-10"><span class="bg-red-600 text-white px-4 py-1 rounded font-bold -rotate-12 border border-white">OUT OF STOCK</span></div>' : ''}
+                        
+                        <div class="h-40 bg-gray-800 rounded-lg mb-4 overflow-hidden flex items-center justify-center text-gray-500">
+                             <img src="${item.img || 'https://via.placeholder.com/400x250?text=No+Image'}" 
+                                  alt="${item.name}" 
+                                  class="w-full h-full object-cover"
+                                  onerror="this.src='https://via.placeholder.com/400x250?text=Invalid+URL'">
+                        </div>
+                        
+                        <div class="flex justify-between items-start mb-2">
+                             <h4 class="font-bold text-lg leading-tight flex-1 mr-2">${item.name}</h4>
+                             ${!isOutOfStock ? `
+                                <span class="text-[10px] px-2 py-0.5 rounded border whitespace-nowrap font-bold ${stock < 10 ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' : 'bg-green-500/20 text-green-400 border-green-500/30'}">
+                                    ${stock} Available
+                                </span>`
+                        : ''}
+                        </div>
+
+                        <p class="text-gray-400 text-sm mb-4 h-10 overflow-hidden line-clamp-2">${item.desc}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="accent-orange font-bold">₹${item.price}</span>
+                            <button onclick="window.addToCart(this, '${item.id}', '${item.name}', ${item.price}, ${stock})" 
+                                ${isOutOfStock ? 'disabled' : ''}
+                                class="bg-accent-orange text-black px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-400 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center">
+                                ${isOutOfStock ? 'Sold Out' : 'Add to Cart'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        window.addToCart = function (btn, id, name, price, maxStock) {
+            const existing = cart.find(item => item.id === id);
+            const currentQty = existing ? existing.qty : 0;
+
+            if (currentQty >= maxStock) {
+                // Shake button to indicate error
+                btn.classList.add('animate-bounce');
+                setTimeout(() => btn.classList.remove('animate-bounce'), 500);
+                alert(`Sorry, only ${maxStock} ${name} available.`);
+                return;
+            }
+
+            // Success Animation
+            if (btn) {
+                const originalContent = btn.innerHTML;
+                const originalClasses = btn.className;
+
+                // Change style to Green/Success
+                btn.innerHTML = `<span>Added</span> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+                btn.classList.remove('bg-accent-orange', 'text-black', 'hover:bg-orange-400');
+                btn.classList.add('bg-green-500', 'text-white', 'scale-105', 'shadow-lg', 'shadow-green-500/50');
+
+                // Revert after 1.5s
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.className = originalClasses;
+                }, 1500);
+            }
+
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ id, name, price, qty: 1, maxStock });
+            }
+            updateCartCount();
+            saveCart(); // Sync to Cloud
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((acc, item) => acc + item.qty, 0);
+            const badge = document.getElementById('cart-count');
+
+            badge.innerText = `Cart (${count})`;
+
+            // Pulse Animation for Header Badge
+            const container = badge.parentElement;
+            container.classList.add('scale-125', 'bg-orange-500', 'text-white');
+            container.classList.remove('bg-orange-500/20', 'text-accent-orange');
+
+            setTimeout(() => {
+                container.classList.remove('scale-125', 'bg-orange-500', 'text-white');
+                container.classList.add('bg-orange-500/20', 'text-accent-orange');
+            }, 200);
+        }
+
+        window.updateQty = function (id, change) {
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+
+            const newQty = item.qty + change;
+
+            // Check Stock Limit if adding
+            if (change > 0 && newQty > item.maxStock) {
+                alert(`Sorry, cannot add more. Only ${item.maxStock} available.`);
+                return;
+            }
+
+            item.qty = newQty;
+            if (item.qty <= 0) {
+                cart = cart.filter(i => i.id !== id);
+            }
+            updateCartCount();
+            saveCart(); // Sync to Cloud
+            showBill(); // Re-render bill
+        }
+
+        window.showBill = function () {
+            if (cart.length === 0) {
+                const itemsContainer = document.getElementById('bill-items');
+                if (itemsContainer.offsetParent !== null) {
+                    document.getElementById('bill-modal').style.display = 'none';
+                } else {
+                    alert("Cart is empty!");
+                }
+                return;
+            }
+
+            const itemsContainer = document.getElementById('bill-items');
+            const totalContainer = document.getElementById('bill-total');
+            let total = 0;
+
+            itemsContainer.innerHTML = '';
+            cart.forEach(item => {
+                const itemTotal = item.price * item.qty;
+                total += itemTotal;
+                itemsContainer.innerHTML += `
+                    <div class="flex justify-between items-center bg-zinc-800/50 p-3 rounded-lg border border-zinc-700">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-white">${item.name}</h4>
+                            <span class="text-xs text-gray-400">₹${item.price} x ${item.qty}</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button onclick="window.updateQty('${item.id}', -1)" class="w-6 h-6 flex items-center justify-center bg-zinc-700 rounded text-accent hover:bg-zinc-600 font-bold">-</button>
+                            <span class="w-4 text-center font-mono font-bold">${item.qty}</span>
+                            <button onclick="window.updateQty('${item.id}', 1)" class="w-6 h-6 flex items-center justify-center bg-zinc-700 rounded text-accent hover:bg-zinc-600 font-bold">+</button>
+                        </div>
+                        <div class="w-16 text-right font-bold text-orange-400">₹${itemTotal}</div>
+                    </div>`;
+            });
+
+            // Add pseudo-GST
+            const gst = total * 0.05;
+            itemsContainer.innerHTML += `
+                <div class="flex justify-between text-xs text-gray-500 mt-4 px-2 italic border-t border-zinc-800 pt-2">
+                    <span>Subtotal</span>
+                    <span>₹${total.toFixed(2)}</span>
+                </div>
+                <div class="flex justify-between text-xs text-gray-500 px-2 italic">
+                    <span>GST (5%)</span>
+                    <span>₹${gst.toFixed(2)}</span>
+                </div>`;
+
+            totalContainer.innerText = `₹${(total + gst).toFixed(2)}`;
+
+            // Update Pay Button
+            const payBtn = document.querySelector('#bill-modal button[onclick*="closeBill"]');
+            if (payBtn) payBtn.setAttribute('onclick', 'window.placeOrder()'); // Dynamic swap
+
+            // OR finding by text/parent if structure changed:
+            // Just ensuring the button in footer calls placeOrder
+            const footerBtn = document.querySelector('#bill-modal .border-t button');
+            if (footerBtn) {
+                footerBtn.innerText = "Pay & Place Order";
+                footerBtn.onclick = window.placeOrder;
+            }
+
+            document.getElementById('bill-modal').style.display = 'flex';
+        }
+
+        window.hideBill = function () {
+            document.getElementById('bill-modal').style.display = 'none';
+        }
+
+        window.placeOrder = async function () {
+            if (cart.length === 0) return;
+            if (!currentUser) return alert("Please login to order");
+
+            const btn = document.querySelector('#bill-modal .border-t button');
+            const originalText = btn.innerText;
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            try {
+                const orderId = 'ORD-' + Date.now().toString().slice(-6) + '-' + Math.floor(Math.random() * 1000); // Unique Order ID
+
+                await runTransaction(db, async (transaction) => {
+                    // 1. Check Stock
+                    const reads = [];
+                    for (const item of cart) {
+                        const ref = doc(db, "canteen_menu", item.id);
+                        const docSnap = await transaction.get(ref);
+                        if (!docSnap.exists()) throw new Error(`Item ${item.name} not found.`);
+                        const serverStock = docSnap.data().stock !== undefined ? docSnap.data().stock : 20;
+                        if (serverStock < item.qty) throw new Error(`Not enough stock for ${item.name}.`);
+                        reads.push({ ref, newStock: serverStock - item.qty });
+                    }
+
+                    // 2. Update Stock
+                    for (const op of reads) {
+                        transaction.update(op.ref, { stock: op.newStock });
+                    }
+
+                    // 3. Create Order
+                    const orderRef = doc(collection(db, "canteen_orders"));
+                    transaction.set(orderRef, {
+                        orderId: orderId,
+                        userId: currentUser.uid,
+                        userName: currentUser.displayName || "Student",
+                        userEmail: currentUser.email,
+                        items: cart,
+                        totalAmount: cart.reduce((sum, i) => sum + (i.price * i.qty), 0) * 1.05,
+                        status: 'pending',
+                        timestamp: new Date(),
+                        barcodeUrl: `https://bwipjs-api.metafloor.com/?bcid=code128&text=${orderId}&scale=3&height=10&incltext=true`
+                    });
+                });
+
+                // Success - Prepare Receipt
+                const receiptData = {
+                    id: orderId,
+                    time: new Date().toLocaleString(),
+                    items: [...cart], // Copy cart items
+                    total: cart.reduce((sum, i) => sum + (i.price * i.qty), 0) * 1.05,
+                    barcode: `https://bwipjs-api.metafloor.com/?bcid=code128&text=${orderId}&scale=3&height=10&incltext=false`
+                };
+
+                // alert("Order Placed Successfully! Your barcode is ready in 'Your Orders'.");
+                cart = [];
+                updateCartCount();
+                saveCart();
+                document.getElementById('bill-modal').style.display = 'none';
+
+                // Show Receipt instead of alert/orders
+                showReceipt(receiptData);
+                // window.showOrders(); // Can still be accessed manually
+
+            } catch (e) {
+                console.error("Order Failed:", e);
+                alert("Order Failed: " + e.message);
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        window.showOrders = function () {
+            document.getElementById('orders-modal').style.display = 'flex';
+            loadUserOrders();
+        }
+
+        window.hideOrders = function () {
+            document.getElementById('orders-modal').style.display = 'none';
+        }
+
+        async function loadUserOrders() {
+            if (!currentUser) return;
+            const container = document.getElementById('orders-list');
+            container.innerHTML = '<div class="text-center text-gray-500">Loading...</div>';
+
+            const q = query(collection(db, "canteen_orders"), where("userId", "==", currentUser.uid));
+
+            onSnapshot(q, (snapshot) => {
+                // 1. Check for Status Updates (Claimed Popup)
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "modified") {
+                        const data = change.doc.data();
+                        if (data.status === 'picked_up') {
+                            // Show Claim Popup
+                            document.getElementById('claim-id').innerText = data.orderId || '...';
+                            const modal = document.getElementById('claim-modal');
+                            if (modal) {
+                                modal.classList.remove('hidden');
+                                modal.style.display = 'flex';
+                            }
+                            // Optional vibration
+                            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                        }
+                    }
+                });
+
+                const orders = [];
+                snapshot.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
+
+                // Client-side sort to avoid Index issues
+                orders.sort((a, b) => {
+                    const tA = a.timestamp ? a.timestamp.toDate().getTime() : 0;
+                    const tB = b.timestamp ? b.timestamp.toDate().getTime() : 0;
+                    return tB - tA;
+                });
+
+                if (orders.length === 0) {
+                    container.innerHTML = '<div class="text-center text-gray-500 mt-10">No active orders found.</div>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                orders.forEach(order => {
+                    const date = order.timestamp?.toDate().toLocaleString() || 'Just now';
+                    const itemsStr = order.items.map(i => `${i.qty}x ${i.name}`).join(', ');
+
+                    let statusColor = 'text-yellow-500';
+                    if (order.status === 'ready') statusColor = 'text-green-500';
+                    if (order.status === 'picked_up') statusColor = 'text-gray-500';
+
+                    // Prepare Receipt Data Retrieval
+                    const receiptDataSafe = JSON.stringify({
+                        id: order.orderId,
+                        time: date,
+                        items: order.items,
+                        total: order.totalAmount,
+                        barcode: order.barcodeUrl
+                    }).replace(/"/g, "&quot;");
+
+                    container.innerHTML += `
+                        <div class="bg-zinc-800 p-4 rounded-xl border border-zinc-700 flex flex-col md:flex-row gap-4 items-center">
+                            <div class="bg-white p-2 rounded flex-shrink-0">
+                                <img src="${order.barcodeUrl}" alt="Barcode" class="h-16 w-48 object-contain">
+                            </div>
+                            <div class="flex-1 text-center md:text-left">
+                                <div class="flex justify-between items-center mb-1">
+                                    <h4 class="font-bold text-white text-lg">${order.orderId}</h4>
+                                    <span class="text-xs font-bold uppercase ${statusColor}">${order.status.replace('_', ' ')}</span>
+                                </div>
+                                <p class="text-gray-400 text-sm mb-1">${itemsStr}</p>
+                                <p class="text-xs text-gray-500">${date} • ₹${order.totalAmount.toFixed(2)}</p>
+                            </div>
+                            <button onclick='window.showReceipt(${receiptDataSafe})' class="bg-zinc-700 hover:bg-zinc-600 text-white p-2 rounded-lg" title="Print Receipt">
+                                🖨️
+                            </button>
+                        </div>
+                    `;
+                });
+            }, (error) => {
+                if (error.code === 'failed-precondition') {
+                    container.innerHTML = `<div class="text-red-500 text-center text-xs">Waiting for Index... <br> (Check Console for Link)</div>`;
+                    console.error("FIREBASE INDEX REQUIRED: ", error);
+                } else {
+                    container.innerHTML = `<div class="text-red-500 text-center">Error loading orders.</div>`;
+                    console.error(error);
+                }
+            });
+        }
+        // --- RECEIPT LOGIC ---
+        window.showReceipt = function (data) {
+            document.getElementById('receipt-id').innerText = data.id;
+            document.getElementById('receipt-time').innerText = data.time.toUpperCase();
+            document.getElementById('receipt-total').innerText = '₹' + data.total.toFixed(2);
+            document.getElementById('receipt-barcode').src = data.barcode;
+
+            const list = document.getElementById('receipt-items');
+            list.innerHTML = '';
+            data.items.forEach(item => {
+                list.innerHTML += `
+                    <div class="flex justify-between text-xs">
+                        <span class="w-8 font-bold">${item.qty} x</span>
+                        <span class="flex-1 truncate mr-2">${item.name}</span>
+                        <span>₹${(item.price * item.qty).toFixed(2)}</span>
+                    </div>
+                `;
+            });
+            // Add GST Line
+            list.innerHTML += `
+                 <div class="flex justify-between text-xs border-t border-dashed border-gray-300 mt-2 pt-2 text-gray-500">
+                     <span>GST (5%)</span>
+                     <span>₹${(data.total - (data.total / 1.05)).toFixed(2)}</span>
+                 </div>
+            `;
+
+            const modal = document.getElementById('receipt-modal');
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+        }
+
+        window.closeReceipt = function () {
+            const modal = document.getElementById('receipt-modal');
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+        }
+
+        window.closeClaimModal = function () {
+            document.getElementById('claim-modal').classList.add('hidden');
+            document.getElementById('claim-modal').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
