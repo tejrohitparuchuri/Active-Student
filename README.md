@@ -7,7 +7,7 @@ Welcome to the **Active Student Portal**, a comprehensive digital ecosystem desi
 ---
 
 ## 🔗 Live Deployment
-**🌐 Website URL:** [https://nrp-tejas26-cloudolog-26265.web.app](https://nrp-tejas26-cloudolog-26265.web.app)
+**🌐 Website URL:** [Active Student](https://activestudent1-cloudolog.web.app)
 
 ---
 
