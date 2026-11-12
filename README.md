@@ -1,59 +1,116 @@
-# 🎓 Active Student Portal | The Hub
+# 🎓 Active Student Portal
 
-![Status](https://img.shields.io/badge/Status-Live-success?style=for-the-badge) ![Firebase](https://img.shields.io/badge/Backend-Firebase-orange?style=for-the-badge) ![Version](https://img.shields.io/badge/Version-1.0-blue?style=for-the-badge)
-
-Welcome to the **Active Student Portal**, a comprehensive digital ecosystem designed to streamline campus life at **Anurag University**. This platform integrates voting, financial transparency, and canteen management into a single, cohesive interface.
-
----
-
-## 🔗 Live Deployment
-**🌐 Website URL:** [Active Student](https://activestudent1-cloudolog.web.app)
+> **Unified Digital Campus Platform for Anurag University**  
+> A complete full-stack Node.js & JavaScript application featuring Campus Elections & Voting, Online Canteen with Barcode Verification, and Tracurrency Financial Ledger.
 
 ---
 
 ## 🚀 Key Features
 
-### 1. 🗳️ Campus Voting System (E-Voting)
-A secure and transparent digital election platform.
-- **Live Elections:** Real-time tracking of active polls.
-- **Secure Voting:** One-vote-per-student policy enforced via Firebase Auth.
-- **Admin Dashboard:** create elections, manage candidates, and view secure results.
-- **Multi-Room Support:** Distinct election rooms for different departments or clubs.
+### 🗳️ 1. Campus Voting & Elections
+* **Public & Private Polls**: Create university-wide elections or batch-specific private rooms protected by secret access keys.
+* **Instant Vote Counting & Live Bars**: Real-time result visualization with animated percentage bars.
+* **Voter Integrity**: Prevents duplicate voting using institutional roll numbers and account IDs.
+* **Admin Control Center**: Start, pause, or end elections and manage candidates and manifestos.
 
-### 2. 📊 Tracurrency (Financial Ledger)
-Revolutionizing financial transparency for student events.
-- **Event Rooms:** Dedicated financial rooms (Lobbies) for specific events.
-- **Real-time Ledger:** Tracks every credit and debit transaction instantly.
-- **Stripe Integration:** Secure online contributions via Stripe payment gateway.
-- **Visual Analytics:** Dynamic charts and balance summaries.
+### 🍔 2. Online Canteen Ordering
+* **Interactive Menu**: Category filtering for Veg, Non-Veg, and Essentials with live stock counts.
+* **Live Orders Queue**: Real-time status tracking (`Pending` ➔ `Ready` ➔ `Picked Up`).
+* **Digital Barcode Receipts**: Instant Code128 barcode generation for queue-less verification at food counters.
+* **Performance Analytics**: Revenue metrics, average ticket size, and Chart.js pie chart breakdown of best-selling dishes.
 
-### 3. 🍔 Online Canteen
-Skip the queue with a digital ordering experience.
-- **Digital Menu:** Browse daily specials and regular items.
-- **Order Management:** Place orders globally and track status.
-- **Admin Mode:** Secure login for canteen staff to manage inventory and view incoming orders.
-
-### 4. 🔐 Security & Identity
-- **Centralized Auth:** Unified login system for Students and Admins.
-- **Role-Based Access:** Dedicated portals for `voting@`, `canteen@`, and `tracurrency@` admin accounts.
-- **Data Safety:** Powered by Google Firestore with real-time security rules.
+### 📊 3. Tracurrency Ledger
+* **Financial Event Rooms**: Manage funds for fests, hackathons, and departmental budgets.
+* **Double-Entry Ledger**: Transparent tracking of incoming contributions and outgoing expenditures.
+* **Live Balance Engine**: Automatically computes real-time liquidity and reserve balances.
+* **Direct Campus UPI**: Integrated dynamic UPI QR code generator for student deposits.
 
 ---
 
-## 🛠️ Technology Stack
-*   **Frontend:** <b>HTML5</b>, Modern <b>JavaScript</b> (ES6+), <b>CSS</b>(Vanilla CSS, TailwindCSS (Utility)).
-*   **Backend:** Firebase (Authentication, Firestore Database).
-*   **Hosting:** Firebase Hosting (Globally distributed content delivery).
-*   **Payments:** Stripe API Integration.
+## 📁 Project Structure
+
+```text
+activestudent/
+├── package.json               # Node.js project manifest & dependencies
+├── server.js                  # Express backend server entry point
+├── .gitignore                 # Standard git ignore rules (node_modules, logs)
+├── .gitattributes             # GitHub Linguist language detection rules
+├── src/
+│   ├── controllers/           # Express route controllers
+│   │   ├── authController.js
+│   │   ├── canteenController.js
+│   │   ├── votingController.js
+│   │   └── ledgerController.js
+│   ├── routes/                # Modular REST API routes
+│   │   ├── authRoutes.js
+│   │   ├── canteenRoutes.js
+│   │   ├── votingRoutes.js
+│   │   └── ledgerRoutes.js
+│   └── data/
+│       ├── store.js           # File-backed JSON data store engine
+│       └── initialData.json   # Seed data for Anurag University
+└── public/                    # Client-side static assets
+    ├── css/                   # Dedicated stylesheets
+    │   ├── hub.css
+    │   ├── auth.css
+    │   ├── voting.css
+    │   ├── canteen.css
+    │   └── tracurrency.css
+    ├── js/                    # Modular client JavaScript
+    │   ├── api.js             # Centralized fetch API client
+    │   ├── auth.js            # Authentication state manager
+    │   ├── auth-pages.js      # Login and signup form logic
+    │   ├── hub.js             # Portal home page live counters
+    │   ├── voting.js          # Voting system client logic
+    │   ├── student-canteen.js # Student food ordering & cart logic
+    │   ├── admin-canteen.js   # Canteen operator dashboard & barcode scanner
+    │   └── tracurrency.js     # Financial rooms & ledger logic
+    ├── index.html             # Active Student Main Hub
+    ├── login.html             # Login portal (@anurag.edu.in)
+    ├── register.html          # Student account registration
+    ├── home.html              # Campus Voting portal
+    ├── student_canteen.html   # Canteen student food ordering
+    ├── admin_canteen.html     # Canteen management & verification
+    └── tracurrency.html       # Financial dashboard & transactions
+```
 
 ---
 
-## 👤 Owner & Developer Details
-*   **Developer:** <a href="mailto:tejrohitparuchuri@gmail.com">Tej Rohit Paruchuri</a>, <a href="mailto:24eg105r62@anurag.edu.in">Nithish Gandi</a>, <a href="mailto:24eg105r65@anurag.edu.in">Pushkaran Adabala</a>, <a href="mailto:24eg105r34@anurag.edu.in">Pedi Kalyan</a>
-*   **Institution:** Anurag University
-*   **Project Context:** Student Activity & Management Portal for more student interactivity...
-*   **Last Updated:** January 4, 2026 at 5:30 PM IST
+## 🛠️ Getting Started
+
+### 1. Installation
+Clone this repository and install dependencies:
+```bash
+npm install
+```
+
+### 2. Start the Server
+Run the application locally:
+```bash
+npm start
+```
+For development with auto-reload:
+```bash
+npm run dev
+```
+
+Visit the application in your browser:
+👉 **`http://localhost:3000`**
 
 ---
 
-> *Built for efficiency. Designed for students.*
+## 🔑 Default Accounts
+
+| Role | Email | Password | Destination |
+| :--- | :--- | :--- | :--- |
+| **Canteen Admin** | `canteen@anurag.edu.in` | `password123` | Canteen Control Center |
+| **Voting Commissioner** | `voting@anurag.edu.in` | `password123` | Election Admin Center |
+| **Finance Secretary** | `tracurrency@anurag.edu.in` | `password123` | Tracurrency Ledger Admin |
+| **Student** | `student@anurag.edu.in` | `password123` | Student Dashboard Hub |
+
+> *Any email ending in `@anurag.edu.in` can register or sign in.*
+
+---
+
+## 📜 License
+MIT License • Developed for Anurag University
