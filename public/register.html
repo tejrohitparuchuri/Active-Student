@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Active Student</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+
+    <div class="glow"></div>
+
+    <div class="w-full max-w-md p-8 rounded-2xl glass-card relative z-10 animate-fade-in-up">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-extrabold mb-2 text-white tracking-tight">Create Account</h1>
+            <p class="text-gray-400 text-sm">Join the Connected Campus Experience</p>
+        </div>
+
+        <form id="register-form" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="fullName" class="block text-xs font-bold text-gray-500 uppercase mb-2">Full Name</label>
+                    <input type="text" id="fullName"
+                        class="w-full px-4 py-3 rounded-xl input-field text-white placeholder-gray-600"
+                        placeholder="John Doe" required>
+                </div>
+                <div>
+                    <label for="rollNo" class="block text-xs font-bold text-gray-500 uppercase mb-2">Roll Number</label>
+                    <input type="text" id="rollNo"
+                        class="w-full px-4 py-3 rounded-xl input-field text-white placeholder-gray-600"
+                        placeholder="22...01" required>
+                </div>
+            </div>
+
+            <div>
+                <label for="email" class="block text-xs font-bold text-gray-500 uppercase mb-2">Email Address</label>
+                <input type="email" id="email"
+                    class="w-full px-4 py-3 rounded-xl input-field text-white placeholder-gray-600"
+                    placeholder="student@anurag.edu.in" required>
+            </div>
+
+            <div>
+                <label for="password" class="block text-xs font-bold text-gray-500 uppercase mb-2">Password</label>
+                <input type="password" id="password"
+                    class="w-full px-4 py-3 rounded-xl input-field text-white placeholder-gray-600"
+                    placeholder="Min. 6 characters" required>
+            </div>
+
+            <div>
+                <label for="confirmPassword" class="block text-xs font-bold text-gray-500 uppercase mb-2">Confirm
+                    Password</label>
+                <input type="password" id="confirmPassword"
+                    class="w-full px-4 py-3 rounded-xl input-field text-white placeholder-gray-600"
+                    placeholder="••••••••" required>
+            </div>
+
+            <div id="error-message" class="text-red-500 text-sm text-center hidden"></div>
+
+            <button type="submit" class="w-full btn-primary font-bold py-3.5 rounded-xl mt-4">
+                Create Account
+            </button>
+        </form>
+
+        <div class="mt-8 text-center">
+            <p class="text-gray-500 text-sm">
+                Already have an account?
+                <a href="login.html" class="text-[#ff9a2c] font-bold hover:underline">Sign In</a>
+            </p>
+            <div class="mt-4">
+                <a href="index.html" class="text-xs text-gray-600 hover:text-gray-400 transition-colors">← Back to
+                    Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/auth-pages.js"></script>
+</body>
+
+</html>
+

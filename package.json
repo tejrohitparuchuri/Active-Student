@@ -1,0 +1,26 @@
+{
+  "name": "active-student-portal",
+  "version": "1.0.0",
+  "description": "Unified Digital Campus Platform for Anurag University: Campus Voting, Online Canteen & Tracurrency Ledger.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node -e \"console.log('No tests configured')\""
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "campus-management",
+    "voting-system",
+    "online-canteen",
+    "ledger-system",
+    "javascript"
+  ],
+  "author": "Anurag University",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.3.0"
+  }
+}

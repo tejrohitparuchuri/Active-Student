@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Anurag Voting — Campus Elections</title>
+    <link rel="stylesheet" href="css/voting.css">
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo">🗳️ <strong>Anurag X cloudoloG</strong></div>
+        <div class="nav-actions">
+            <button class="btn" onclick="window.location.href='index.html'">⬅ Dashboard</button>
+            <div id="auth-buttons" style="display:none;"></div>
+        </div>
+    </div>
+
+    <main id="app">
+        <!-- LOADING -->
+        <section id="loading" class="center-screen container" style="text-align:center; min-height:80vh">
+            <div style="font-size:3rem; animation: pulse 1s infinite">🗳️</div>
+            <p style="color:var(--text-muted); margin-top:1rem">Accessing Voting Booth...</p>
+        </section>
+
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="hidden container">
+            <div style="margin: 36px 0; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h2 style="margin:0">Voting Dashboard</h2>
+                    <p style="color:var(--muted);margin:8px 0 0">Welcome, <span id="user-name-display">Student</span></p>
+                </div>
+                <button class="btn" onclick="logout()">Sign Out</button>
+            </div>
+
+            <!-- USER HOME VIEW -->
+            <div id="user-dashboard-home"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+                <div class="card" onclick="openActiveElections()"
+                    style="cursor:pointer; text-align:center; padding:30px; border: 1px solid var(--accent); background: linear-gradient(45deg, var(--bg-card), rgba(76, 175, 80, 0.1)); transition:transform 0.2s"
+                    onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="font-size:3rem; margin-bottom:10px">🗳️</div>
+                    <h2 style="margin:0">Active Elections</h2>
+                    <p style="color:var(--text-muted); margin-top:8px">View and vote in live polls</p>
+                </div>
+
+                <div class="card" onclick="openResults()"
+                    style="cursor:pointer; text-align:center; padding:30px; border: 1px solid var(--text-color); background: linear-gradient(45deg, var(--bg-card), rgba(255, 255, 255, 0.05)); transition:transform 0.2s"
+                    onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="font-size:3rem; margin-bottom:10px">🏆</div>
+                    <h2 style="margin:0">Results</h2>
+                    <p style="color:var(--text-muted); margin-top:8px">See winners of past elections</p>
+                </div>
+            </div>
+
+            <!-- ACTIVE ELECTIONS VIEW -->
+            <div id="user-active-elections-view" class="hidden">
+                <button class="btn" onclick="closeActiveElections()" style="margin-bottom:20px">← Back to Dashboard</button>
+                <div id="voting-area">
+                    <!-- List injected here -->
+                </div>
+            </div>
+
+            <!-- RESULTS LIST VIEW -->
+            <div id="user-results-view" class="hidden">
+                <button class="btn" onclick="closeResults()" style="margin-bottom:20px">← Back to Dashboard</button>
+                <h3 style="border-bottom:1px solid var(--border); padding-bottom:1rem">Past Elections</h3>
+                <div id="results-list-area"
+                    style="display:grid; gap:1.5rem; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); margin-top:1.5rem">
+                    <!-- Ended elections list -->
+                </div>
+            </div>
+
+            <!-- RESULT DETAIL VIEW -->
+            <div id="user-results-detail-view" class="hidden">
+                <button class="btn" onclick="closeResultDetails()" style="margin-bottom:20px">← Back to List</button>
+                <div id="results-detail-area">
+                    <!-- Specific election results -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ADMIN DASHBOARD -->
+        <section id="admin-dashboard" class="hidden">
+            <div
+                style="background:var(--panel); padding: 24px 48px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center;">
+                <h2 style="margin:0; font-size: 1.5rem;">Admin Control Center</h2>
+                <button class="btn" onclick="logout()">Sign Out</button>
+            </div>
+
+            <!-- VIEW 1: ADMIN HOME -->
+            <div id="admin-view-home" style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+                <div class="card" onclick="openAllRooms()"
+                    style="cursor:pointer; text-align:center; padding:30px; margin-bottom: 2rem; border: 1px solid var(--accent); background: linear-gradient(45deg, var(--bg-card), rgba(255, 154, 44, 0.05)); transition:transform 0.2s"
+                    onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="font-size:3rem; margin-bottom:10px">📂</div>
+                    <h2 style="margin:0">All Rooms</h2>
+                    <p style="color:var(--text-muted); margin-top:8px">View and manage all election rooms</p>
+                </div>
+
+                <div style="background:var(--panel); padding:2rem; border-radius:12px; margin-bottom:2rem">
+                    <h3 style="margin-top:0">Create New Election Room</h3>
+
+                    <label style="font-size:0.85rem; color:var(--muted); display:block; margin-bottom:4px">Election Name</label>
+                    <input id="new-election-name" class="input" type="text" placeholder="e.g. Class Representative 2026"
+                        style="margin-top:0; margin-bottom:12px">
+
+                    <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:start; margin-bottom:16px;">
+                        <div style="flex:0 0 auto;">
+                            <label style="font-size:0.85rem; color:var(--muted); display:block; margin-bottom:4px">Room Visibility</label>
+                            <select id="new-election-type" class="input"
+                                style="margin-top:0; width:150px; cursor:pointer" onchange="toggleCreationSecret()">
+                                <option value="public">Public 🌍</option>
+                                <option value="private">Private 🔒</option>
+                            </select>
+                        </div>
+
+                        <div id="new-election-secret-wrapper" class="hidden" style="flex:1; min-width:200px;">
+                            <label style="font-size:0.85rem; color:var(--accent); display:block; margin-bottom:4px">Secret Access Code</label>
+                            <input id="new-election-secret" class="input" type="text"
+                                placeholder="Required key for users (e.g. 'CS_A_2026')" style="margin-top:0">
+                        </div>
+                    </div>
+
+                    <button onclick="window.createElection()" class="btn filled" style="width:100%">Create Election Room</button>
+                </div>
+            </div>
+
+            <!-- VIEW 1.5: ALL ROOMS LIST -->
+            <div id="admin-view-all-rooms" class="hidden" style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+                <button class="btn" onclick="closeAllRooms()" style="margin-bottom:20px">← Back to Dashboard</button>
+
+                <h3 style="border-bottom:1px solid var(--border); padding-bottom:1rem">Existing Elections</h3>
+                <div id="election-rooms-list"
+                    style="display:grid; gap:1.5rem; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); margin-top:1.5rem">
+                    <p style="color:var(--muted)">Loading elections...</p>
+                </div>
+            </div>
+
+            <!-- VIEW 2: ELECTION DETAILS (Single Room) -->
+            <div id="admin-view-details" class="hidden" style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
+                <div style="margin-bottom:1rem; display:flex; align-items:center; gap:1rem">
+                    <button onclick="window.exitElectionRoom()" class="btn">← Back to Rooms</button>
+                    <h2 id="current-room-title" style="margin:0; color:var(--accent)">Election Name</h2>
+                </div>
+
+                <div class="admin-wrapper"
+                    style="display:grid; grid-template-columns: 300px 1fr; gap:24px; align-items:start;">
+                    <!-- LEFT SIDEBAR -->
+                    <div class="admin-sidebar" style="display:flex; flex-direction:column; gap:24px;">
+                        <!-- ELECTION CONTROLS -->
+                        <div class="card" style="border-left: 4px solid var(--accent);">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <h3 style="margin:0">Status</h3>
+                                    <span id="admin-election-status"
+                                        style="font-weight:bold; color:white; font-size:1.2rem; display:block; margin-top:4px">Loading...</span>
+                                </div>
+                                <div style="font-size:2rem">🚦</div>
+                            </div>
+                            <div id="admin-controls"
+                                style="margin-top:20px; display:flex; gap:10px; flex-direction:column">
+                            </div>
+                            <p style="margin:12px 0 0; color:var(--muted); font-size:0.85rem">
+                                Master switch for election visibility.
+                            </p>
+                        </div>
+
+                        <!-- SETTINGS (Title) -->
+                        <div class="card">
+                            <h3>⚙️ Settings</h3>
+                            <p style="color:var(--muted); margin-top:0; font-size:0.9rem">Edit room details.</p>
+
+                            <label style="font-size:0.8rem; color:var(--muted)">Election Title</label>
+                            <input id="admin-edit-title" class="input" type="text" placeholder="Election Title"
+                                style="margin-top:4px">
+
+                            <button class="btn filled" style="margin-top:16px; width:100%"
+                                onclick="saveElectionSettings()">Save Settings</button>
+                            <button class="btn" style="margin-top:8px; width:100%; color:#f44336; border-color:#f44336"
+                                onclick="deleteCurrentElection()">Delete Election</button>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT MAIN CONTENT -->
+                    <div class="admin-main" style="display:flex; flex-direction:column; gap:24px;">
+                        <div class="card">
+                            <h3 style="margin-top:0">Add Candidate</h3>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                                <input id="cand-name" class="input" type="text" placeholder="Candidate Name" required
+                                    style="margin-top:0">
+                                <input id="cand-tagline" class="input" type="text" placeholder="Position / Tagline" required
+                                    style="margin-top:0">
+                                <input id="cand-manifesto" class="input" type="text" placeholder="Manifesto / Goal"
+                                    style="grid-column: span 2; margin-top:0">
+                                <button onclick="addNewCandidate()" class="btn filled"
+                                    style="grid-column: span 2; padding: 14px">Add Candidate to Room</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 style="margin-bottom:16px">Manage Candidates</h3>
+                            <div id="admin-candidates-list">
+                                <!-- Admin Candidate List -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- App Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/voting.js"></script>
+</body>
+
+</html>
+

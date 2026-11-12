@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Student | The Hub</title>
+    <link rel="stylesheet" href="css/hub.css">
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">Active<span>Student</span></div>
+
+        <!-- Auth UI -->
+        <div style="display:flex; align-items:center; gap:20px;">
+            <div id="auth-loading" style="color: var(--text-muted); font-size: 14px;">Connecting...</div>
+
+            <div id="auth-guest" style="display:none; align-items:center; gap:16px;">
+                <a href="login.html"
+                    style="background: var(--accent); color: #000; padding: 8px 20px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 13px; transition:transform 0.2s;">Login</a>
+            </div>
+
+            <div id="auth-user" style="display:none; align-items:center; gap:16px;">
+                <div style="text-align:right;">
+                    <div id="user-name" style="color:white; font-weight:700; font-size:14px; line-height:1.2;"></div>
+                    <div id="user-roll"
+                        style="color:var(--text-muted); font-size:10px; text-transform:uppercase; letter-spacing:0.5px;">
+                        Student</div>
+                </div>
+                <button onclick="logout()"
+                    style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; transition:all 0.2s;">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <header>
+        <h1>Everything You Need,<br>One Platform.</h1>
+        <p class="subtitle">Access the most powerful student tools designed to make campus life seamless, transparent,
+            and digital.</p>
+    </header>
+
+    <div class="container">
+        <!-- Card 1: Voting -->
+        <article class="card">
+            <div>
+                <div class="card-icon">🗳️</div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2>Campus Voting</h2>
+                    <small id="voting-status"
+                        style="font-weight:bold; font-size:0.8rem; text-transform:uppercase; background:rgba(255,255,255,0.1); padding:4px 8px; border-radius:4px;">Connecting...</small>
+                </div>
+                <p>Secure, transparent, and encrypted digital election system. Cast your vote and shape the future.</p>
+            </div>
+            <a href="#" onclick="navigate(event, 'home.html')" class="btn">
+                Launch Voting
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3">
+                    </path>
+                </svg>
+            </a>
+        </article>
+
+        <!-- Card 2: Ledger -->
+        <article class="card">
+            <div>
+                <div class="card-icon">📊</div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2>Tracurrency</h2>
+                    <small id="ledger-balance"
+                        style="font-weight:bold; font-size:0.9rem; font-family:monospace;">...</small>
+                </div>
+                <p>Track every transaction with precision. A centralized dashboard for budget management and financial
+                    reporting.</p>
+            </div>
+            <a href="#" onclick="navigate(event, 'tracurrency.html')" class="btn">
+                View Tracurrency
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3">
+                    </path>
+                </svg>
+            </a>
+        </article>
+
+        <!-- Card 3: Canteen -->
+        <article class="card">
+            <div>
+                <div class="card-icon">🍔</div>
+                <h2>Online Canteen</h2>
+                <p>Skip the queue! Browse the daily menu, pre-order your meals, and pick up when ready.</p>
+            </div>
+            <a href="#" onclick="navigate(event, 'student_canteen.html')" class="btn">
+                Order Food
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3">
+                    </path>
+                </svg>
+            </a>
+        </article>
+    </div>
+
+    <footer>
+        &copy; 2026 Anurag University • Active Student Unified Campus Platform
+    </footer>
+
+    <!-- App Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/hub.js"></script>
+</body>
+
+</html>
+

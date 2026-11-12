@@ -1,0 +1,224 @@
+{
+  "users": [
+    {
+      "id": "usr-admin-canteen",
+      "email": "canteen@anurag.edu.in",
+      "password": "password123",
+      "fullName": "Canteen Admin",
+      "role": "canteen_admin",
+      "rollNo": "STAFF01"
+    },
+    {
+      "id": "usr-admin-voting",
+      "email": "voting@anurag.edu.in",
+      "password": "password123",
+      "fullName": "Voting Commissioner",
+      "role": "voting_admin",
+      "rollNo": "STAFF02"
+    },
+    {
+      "id": "usr-admin-tracurrency",
+      "email": "tracurrency@anurag.edu.in",
+      "password": "password123",
+      "fullName": "Finance Secretary",
+      "role": "ledger_admin",
+      "rollNo": "STAFF03"
+    },
+    {
+      "id": "usr-sample-student",
+      "email": "student@anurag.edu.in",
+      "password": "password123",
+      "fullName": "Rahul Sharma",
+      "role": "student",
+      "rollNo": "2201A0501",
+      "hasVoted": false
+    }
+  ],
+  "canteen_menu": [
+    {
+      "id": "item-1",
+      "name": "Masala Dosa",
+      "desc": "Crispy golden crepe filled with spiced potato masala served with coconut chutney & sambar.",
+      "price": 50,
+      "category": "Veg",
+      "stock": 25,
+      "img": "https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=500&auto=format&fit=crop&q=60"
+    },
+    {
+      "id": "item-2",
+      "name": "Veg Biryani Combo",
+      "desc": "Aromatic basmati rice cooked with garden fresh vegetables and whole spices.",
+      "price": 90,
+      "category": "Veg",
+      "stock": 20,
+      "img": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=500&auto=format&fit=crop&q=60"
+    },
+    {
+      "id": "item-3",
+      "name": "Chicken Biryani Special",
+      "desc": "Hyderabadi dum biryani cooked with tender chicken pieces and secret spices.",
+      "price": 140,
+      "category": "Non-Veg",
+      "stock": 30,
+      "img": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=500&auto=format&fit=crop&q=60"
+    },
+    {
+      "id": "item-4",
+      "name": "Egg Fried Rice",
+      "desc": "Wok-tossed rice with scrambled eggs, crisp veggies, and savoury soy sauce.",
+      "price": 80,
+      "category": "Non-Veg",
+      "stock": 18,
+      "img": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=500&auto=format&fit=crop&q=60"
+    },
+    {
+      "id": "item-5",
+      "name": "Samosa (2 pcs)",
+      "desc": "Crispy pastry stuffed with seasoned potatoes and green peas with tangy chutneys.",
+      "price": 30,
+      "category": "Veg",
+      "stock": 40,
+      "img": "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500&auto=format&fit=crop&q=60"
+    },
+    {
+      "id": "item-6",
+      "name": "Cold Coffee Shake",
+      "desc": "Rich creamy blended iced coffee topped with chocolate syrup.",
+      "price": 45,
+      "category": "Essentials",
+      "stock": 35,
+      "img": "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=500&auto=format&fit=crop&q=60"
+    },
+    {
+      "id": "item-7",
+      "name": "Mineral Water (1L)",
+      "desc": "Packaged pure drinking water.",
+      "price": 20,
+      "category": "Essentials",
+      "stock": 50,
+      "img": "https://images.unsplash.com/photo-1548839140-29a749e1bc4e?w=500&auto=format&fit=crop&q=60"
+    }
+  ],
+  "canteen_orders": [],
+  "carts": {},
+  "elections": [
+    {
+      "id": "elec-1",
+      "electionTitle": "Student Council President 2026",
+      "status": "active",
+      "roomType": "public",
+      "accessCode": "",
+      "createdAt": "2026-11-01T10:00:00.000Z",
+      "candidates": [
+        {
+          "id": "cand-1",
+          "name": "Aarav Patel",
+          "tagline": "Empowering Student Voices & Tech Innovation",
+          "manifesto": "Better campus Wi-Fi, 24/7 library access during exams, and increased club funding.",
+          "votes": 142
+        },
+        {
+          "id": "cand-2",
+          "name": "Sneha Reddy",
+          "tagline": "Inclusive Campus, Transparent Governance",
+          "manifesto": "Subsidized canteen healthy meal plans, student grievance redressal cell, and cultural fest revamp.",
+          "votes": 128
+        },
+        {
+          "id": "cand-3",
+          "name": "Vikram Singh",
+          "tagline": "Sports Infrastructure & Industry Placement Alliances",
+          "manifesto": "Modern sports complex renovations and direct student internship pipelines.",
+          "votes": 95
+        }
+      ],
+      "voters": []
+    },
+    {
+      "id": "elec-2",
+      "electionTitle": "CSE Department Class Representative",
+      "status": "active",
+      "roomType": "public",
+      "accessCode": "",
+      "createdAt": "2026-11-05T09:30:00.000Z",
+      "candidates": [
+        {
+          "id": "cand-4",
+          "name": "Pooja Verma",
+          "tagline": "Collaborative study circles & lab access",
+          "manifesto": "Extending lab hours and providing open-source project mentorship.",
+          "votes": 48
+        },
+        {
+          "id": "cand-5",
+          "name": "Karthik Naidu",
+          "tagline": "Hackathons & coding sprints coordinator",
+          "manifesto": "Organizing weekly coding challenges and guest tech lectures.",
+          "votes": 52
+        }
+      ],
+      "voters": []
+    }
+  ],
+  "tracurrency_events": [
+    {
+      "id": "evt-fest-2026",
+      "fundTitle": "Dakshaa Annual Cultural Fest 2026",
+      "fundsGiven": 75000,
+      "minContribution": 100,
+      "fixedContribution": 500,
+      "createdAt": "2026-10-15T08:00:00.000Z"
+    },
+    {
+      "id": "evt-tech-2026",
+      "fundTitle": "Agastya National Hackathon Fund",
+      "fundsGiven": 35000,
+      "minContribution": 50,
+      "fixedContribution": 200,
+      "createdAt": "2026-11-02T11:00:00.000Z"
+    }
+  ],
+  "ledger": [
+    {
+      "id": "tx-1",
+      "eventId": "evt-fest-2026",
+      "type": "credit",
+      "title": "College Management Grant",
+      "contributor": "Anurag Management",
+      "amount": 50000,
+      "timestamp": "2026-10-15T10:00:00.000Z",
+      "note": "Initial festival allocation"
+    },
+    {
+      "id": "tx-2",
+      "eventId": "evt-fest-2026",
+      "type": "credit",
+      "title": "Student Council Deposit",
+      "contributor": "CSE Batch '26",
+      "amount": 12500,
+      "timestamp": "2026-10-20T14:30:00.000Z",
+      "note": "Class contribution"
+    },
+    {
+      "id": "tx-3",
+      "eventId": "evt-fest-2026",
+      "type": "debit",
+      "title": "Sound & Lighting Advance",
+      "contributor": "Stage Committee",
+      "amount": 18000,
+      "timestamp": "2026-10-25T16:00:00.000Z",
+      "purpose": "Audio engineering equipment & trusses"
+    },
+    {
+      "id": "tx-4",
+      "eventId": "evt-fest-2026",
+      "type": "debit",
+      "title": "Poster & Banner Printing",
+      "contributor": "Media Team",
+      "amount": 4250,
+      "timestamp": "2026-11-01T12:00:00.000Z",
+      "purpose": "Campus signage & standees"
+    }
+  ]
+}
+

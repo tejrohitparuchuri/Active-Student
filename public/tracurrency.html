@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Student | Tracurrency Ledger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/tracurrency.css">
+</head>
+
+<body class="p-4 md:p-8">
+
+    <nav class="flex justify-between items-center mb-12">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-orange-600 rounded"></div>
+            <h1 class="font-bold text-xl accent-orange uppercase tracking-widest">Tracurrency</h1>
+        </div>
+        <div class="flex gap-3">
+            <a href="index.html"
+                class="bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-lg text-xs font-bold transition-all border border-zinc-700 text-white flex items-center">⬅
+                Dashboard</a>
+            <div id="active-badge" class="hidden px-4 py-1 rounded-full text-xs font-bold border"></div>
+            <button onclick="logout()" class="bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-lg text-xs font-bold border border-zinc-700 text-gray-300">
+                Sign Out
+            </button>
+        </div>
+    </nav>
+
+    <!-- LOBBY VIEW -->
+    <div id="lobby-view" class="container mx-auto mt-8">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-bold flex items-center gap-3">📂 <span class="text-white">Financial Rooms</span></h2>
+            <button id="create-room-btn" onclick="openCreateRoomModal()"
+                class="hidden bg-accent-orange text-black px-4 py-2 rounded-lg font-bold text-sm hover:scale-105 transition-transform">+
+                Create Room</button>
+        </div>
+
+        <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <p class="text-gray-500 animate-pulse">Loading financial rooms...</p>
+        </div>
+
+        <!-- Create Room Modal -->
+        <div id="create-room-modal"
+            class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm p-4">
+            <div class="card-dark p-8 rounded-2xl w-full max-w-md relative border border-orange-500/30 shadow-2xl">
+                <button onclick="closeCreateRoomModal()"
+                    class="absolute top-4 right-4 text-gray-500 hover:text-white text-xl">✕</button>
+                <h3 class="text-xl font-bold mb-6 accent-orange flex items-center gap-2">✨ Create Financial Room</h3>
+                <div class="space-y-5">
+                    <div>
+                        <label class="text-[10px] text-gray-400 font-bold uppercase block mb-1">Event Name</label>
+                        <input id="new-room-name" placeholder="e.g. Annual Cultural Fest 2026"
+                            class="bg-black/50 border-zinc-700 focus:border-orange-500">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-400 font-bold uppercase block mb-1">Funds Given (Initial Budget)</label>
+                        <input id="new-room-budget" type="number" placeholder="₹ 0.00"
+                            class="bg-black/50 border-zinc-700 focus:border-orange-500">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase block mb-1">Min Contrib (₹)</label>
+                            <input id="new-room-min" type="number" placeholder="Optional"
+                                class="bg-black/50 border-zinc-700 focus:border-orange-500">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase block mb-1">Fixed (₹)</label>
+                            <input id="new-room-fixed" type="number" placeholder="Optional"
+                                class="bg-black/50 border-zinc-700 focus:border-orange-500">
+                        </div>
+                    </div>
+                    <button onclick="createNewRoom()"
+                        class="w-full bg-accent-orange/90 hover:bg-accent-orange text-black font-bold py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(255,154,44,0.3)]">Create
+                        Room</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EVENT VIEW (Detailed) -->
+    <div id="event-view" class="hidden">
+        <button onclick="window.exitEvent()"
+            class="mb-6 text-gray-400 hover:text-white flex items-center gap-2 text-xs font-bold uppercase tracking-wider transition-colors">
+            ⬅ Return into Lobby
+        </button>
+        <header class="mb-12 text-center md:text-left">
+            <span id="fund-title-display"
+                class="bg-orange-500/10 text-orange-500 px-3 py-1 rounded-full text-xs font-semibold border border-orange-500/30">Live
+                University Fund</span>
+            <div class="flex flex-col md:flex-row gap-8 mt-6">
+                <div>
+                    <h2 class="text-6xl font-black">₹<span id="live-balance">45,250</span></h2>
+                    <p class="text-gray-500 mt-2 font-mono text-xs tracking-widest uppercase">Current Balance</p>
+                </div>
+                <div class="hidden md:block w-px bg-zinc-800"></div>
+                <div class="md:pl-4 flex flex-col justify-end">
+                    <h2 class="text-4xl font-bold text-green-500">₹<span id="total-collected">0</span></h2>
+                    <p class="text-gray-500 mt-1 font-mono text-xs tracking-widest uppercase">Total Contributions</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Payment Form -->
+                <section class="card-dark p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold mb-4">💸 Log Expenditure / Transfer</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase">Payment Mode</label>
+                            <select id="pay-mode">
+                                <option value="UPI">UPI ID (e.g. college@ybl)</option>
+                                <option value="Bank">Bank Account / IFSC</option>
+                                <option value="Cash">Cash Advance</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase">Receiver Details</label>
+                            <input type="text" id="pay-details" placeholder="Enter ID or Account No.">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase">Amount (₹)</label>
+                            <input type="number" id="pay-amount" placeholder="0.00">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase">Purpose of Use</label>
+                            <input type="text" id="pay-purpose" placeholder="e.g. Stage Decor, Sound System">
+                        </div>
+                        <button onclick="processPayment()"
+                            class="w-full bg-accent-orange text-black font-bold py-3 rounded-xl hover:scale-[1.02] transition-transform">Log
+                            Transfer</button>
+                    </div>
+                </section>
+
+                <!-- Admin Controls -->
+                <section id="admin-controls" class="card-dark p-6 rounded-2xl hidden border-l-4 border-orange-500">
+                    <h3 class="text-lg font-bold mb-4">⚙️ Admin Controls</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase">Funding / Event Title</label>
+                            <input type="text" id="fund-title-input" placeholder="e.g. Annual Fest Fund">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase">Set Minimum Contribution (₹)</label>
+                            <input type="number" id="min-amount" placeholder="e.g. 50">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase">Set Fixed Contribution (₹)</label>
+                            <input type="number" id="fixed-amount" placeholder="e.g. 500 (Optional)">
+                        </div>
+                        <button onclick="window.saveSettings()"
+                            class="w-full bg-zinc-800 text-white font-bold py-2 rounded-lg hover:bg-zinc-700 transition-colors text-xs">
+                            Update Settings
+                        </button>
+                    </div>
+                </section>
+
+                <section class="card-dark p-6 rounded-2xl flex flex-col items-center justify-center text-center">
+                    <h3 class="text-sm font-bold text-gray-400 mb-6 uppercase tracking-widest">Contribute via UPI</h3>
+                    <div class="bg-white p-2 rounded-lg mb-4">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi%3A%2F%2Fpay%3Fpa%3Danurag.campus%40axisbank%26pn%3DActiveStudent%26cu%3DINR"
+                            alt="QR Code">
+                    </div>
+                    <p class="text-[10px] text-gray-500">Scan for direct campus UPI deposit</p>
+                </section>
+            </div>
+
+            <div class="lg:col-span-2">
+                <section class="card-dark p-6 rounded-2xl h-full">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold">Recent Ledger Activity</h3>
+                        <span class="text-xs text-gray-500">Live Updates Enabled</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Left: Expenditure / Used Money -->
+                        <div
+                            class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800 border-l-4 border-l-red-500/50">
+                            <h4 class="text-sm font-bold text-red-500 mb-4 uppercase tracking-wider">🔻 Expenditure</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr class="text-xs text-gray-500 border-b border-zinc-800">
+                                            <th class="pb-3">DATE / DESC</th>
+                                            <th class="pb-3 text-right">AMOUNT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="debit-list" class="text-sm"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Right: Funded Money / Contributions -->
+                        <div
+                            class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800 border-l-4 border-l-green-500/50">
+                            <h4 class="text-sm font-bold text-green-500 mb-4 uppercase tracking-wider">💚 Contributions</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr class="text-xs text-gray-500 border-b border-zinc-800">
+                                            <th class="pb-3">CONTRIBUTOR</th>
+                                            <th class="pb-3 text-right">AMOUNT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="credit-list" class="text-sm"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/tracurrency.js"></script>
+</body>
+
+</html>
+
