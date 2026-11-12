@@ -1,8 +1,10 @@
 # Auto detect text files and perform LF normalization
 * text=auto eol=lf
 
-# Explicitly ensure JavaScript and CSS are recognized as primary project languages
+# Exclude HTML from repository language stats so JavaScript is dominant
+*.html linguist-detectable=false
+*.html linguist-vendored
+
+# Ensure JavaScript is highlighted as the primary language
 *.js linguist-detectable=true
 *.css linguist-detectable=true
-*.html linguist-detectable=true
-
